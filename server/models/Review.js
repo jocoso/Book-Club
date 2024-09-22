@@ -2,7 +2,8 @@
 const { Schema, model } = require('mongoose');
 
 // Define the Review Schema
-const reviewSchema = new Schema({
+const reviewSchema = new Schema(
+  {
     reviewText: {
         type: String,
         required: 'You need to leave a review!',
@@ -26,11 +27,24 @@ const reviewSchema = new Schema({
         type: Date,
         default: Date.now,
     },
-}, {
+    title: {
+        type: String,
+      },
+      content: {
+        type: String,
+      },
+      inks: {
+        type: Number,
+        default: 0,
+      },
+    },
+    {
+ 
     toJSON: {
         virtuals: true,
     }
-});
+  }
+);
 
 //Export Review model
 const Review = model('Review', reviewSchema);

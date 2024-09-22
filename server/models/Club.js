@@ -1,6 +1,7 @@
 const { Schema, model } = require('mongoose');
 
-const clubSchema = new Schema({
+const clubSchema = new Schema(
+{
     clubName: {
         type: String,
         required: true, 
@@ -12,19 +13,31 @@ const clubSchema = new Schema({
         required:true,
         trim: true,
     },
-    members: [{
+    members: [
+    {
         type: Schema.Types.ObjectId,
         ref: 'User',
-    }],
-    discussions: [{
+    }
+  ],
+    discussions: [
+    {
         type: Schema.Types.ObjectId,
         ref: 'Discussion',
-    }],
-}, {
+    }
+  ],
+  posts: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: 'Post',
+    },
+  ],
+},
+  {
     toJSON: {
         virtuals: true,
     },
-});
+  }
+);
 
 // Virtual to get the number of members in the club
 clubSchema.virtual('memberCount').get(function() {
