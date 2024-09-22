@@ -19,7 +19,7 @@ const reviewSchema = new Schema(
         required: true,
     },
     bookId: {
-        type: Schema.Types.objectId,
+        type: Schema.Types.ObjectId,
         ref: 'Book',
         required: true,
     },
