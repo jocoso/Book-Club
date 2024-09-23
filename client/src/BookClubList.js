@@ -13,4 +13,4 @@ const BookClubList = () => {
   );
 };
 
-export default BookClubList;
+export default BookClubList
