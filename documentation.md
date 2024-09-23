@@ -1,4 +1,3 @@
-Here is the fixed input transformed into a documentation format:
 
 ---
 
@@ -183,3 +182,130 @@ const wishcart = getUserWishcart("jdwuicxbksdjlsadjfh");
 ```
 
 ---
+
+### **Mutations**
+
+#### `addUser(username: String!, email: String!, password: String!): User`
+
+This mutation creates a new user in the system.
+
+**Parameters:**
+
+- `username: String!`The unique username for the user.
+- `email: String!`The email address for the user.
+- `password: String!`
+  The password for the user (should be securely hashed).
+
+**Response:**
+Returns the newly created `User` object.
+
+**Usage Example:**
+
+```javascript
+const newUser = addUser("newUser123", "newuser@example.com", "password123");
+```
+
+---
+
+#### `addBook(_id: ID!, blob: Int): Book`
+
+This mutation creates a new `Book` object if it doesn't already exist. The `Blob` value is optional and defaults to `0`.
+
+**Parameters:**
+
+- `_id: ID!`The unique ID for the book (ISBN-10).
+- `blob: Int`
+  The blob value for the book. Defaults to `0`.
+
+**Response:**
+Returns the newly created or existing `Book` object.
+
+**Usage Example:**
+
+```javascript
+const newBook = addBook("1234567890", 10);
+```
+
+---
+
+#### `addCommentToBook(book_id: ID!, comment: CommentInput!): Book`
+
+This mutation adds a comment to a specific book.
+
+**Parameters:**
+
+- `book_id: ID!`The unique ID of the book.
+- `comment: CommentInput!`
+  The comment input containing details of the new comment.
+
+**Response:**
+Returns the updated `Book` object with the new comment.
+
+**Usage Example:**
+
+```javascript
+const updatedBook = addCommentToBook("1481465589", { _id: "123", Title: "Great Book!", Author: user });
+```
+
+---
+
+#### `addPostToClub(club_id: ID!, post: PostInput!): Club`
+
+This mutation adds a post to a specific club.
+
+**Parameters:**
+
+- `club_id: ID!`The unique ID of the club.
+- `post: PostInput!`
+  The post input containing details of the new post.
+
+**Response:**
+Returns the updated `Club` object with the new post.
+
+**Usage Example:**
+
+```javascript
+const updatedClub = addPostToClub("clubId123", { _id: "post123", Title: "New Post", Content: "Great content!", Author: user });
+```
+
+---
+
+#### `addFriend(user_id: ID!, friend_id: ID!): User`
+
+This mutation adds a friend to the user's friend list.
+
+**Parameters:**
+
+- `user_id: ID!`The ID of the user adding a friend.
+- `friend_id: ID!`
+  The ID of the user to be added as a friend.
+
+**Response:**
+Returns the updated `User` object with the new friend added.
+
+**Usage Example:**
+
+```javascript
+const updatedUser = addFriend("userId123", "friendId456");
+```
+
+---
+
+#### `addMemberToClub(club_id: ID!, user_id: ID!): Club`
+
+This mutation adds a user to a club as a member.
+
+**Parameters:**
+
+- `club_id: ID!`The ID of the club.
+- `user_id: ID!`
+  The ID of the user to be added as a member.
+
+**Response:**
+Returns the updated `Club` object with the new member added.
+
+**Usage Example:**
+
+```javascript
+const updatedClub = addMemberToClub("club
+```
