@@ -1,4 +1,5 @@
 
+
 ---
 
 ## API Documentation
@@ -183,6 +184,36 @@ const wishcart = getUserWishcart("jdwuicxbksdjlsadjfh");
 
 ---
 
+#### `getAllBooks(): [Book!]`
+
+This query retrieves all books in the system. If no books exist, it returns an empty array.
+
+**Response:**
+Returns an array of `Book` objects, each with `Comments` and `Blob`.
+
+**Usage Example:**
+
+```javascript
+const books = getAllBooks();
+```
+
+---
+
+#### `getAllUsers(): [User!]`
+
+This query retrieves all users in the system. If no users exist, it returns an empty array.
+
+**Response:**
+Returns an array of `User` objects, each with `Username`, `Email`, and other fields.
+
+**Usage Example:**
+
+```javascript
+const users = getAllUsers();
+```
+
+---
+
 ### **Mutations**
 
 #### `addUser(username: String!, email: String!, password: String!): User`
@@ -278,7 +309,9 @@ This mutation adds a friend to the user's friend list.
 
 - `user_id: ID!`The ID of the user adding a friend.
 - `friend_id: ID!`
-  The ID of the user to be added as a friend.
+  The ID of the user to be added as a friend
+
+.
 
 **Response:**
 Returns the updated `User` object with the new friend added.
@@ -307,5 +340,131 @@ Returns the updated `Club` object with the new member added.
 **Usage Example:**
 
 ```javascript
-const updatedClub = addMemberToClub("club
+const updatedClub = addMemberToClub("clubId123", "userId456");
+```
+
+---
+
+### **Remove Mutations**
+
+#### `removeUser(user_id: ID!): User`
+
+This mutation removes a user from the system.
+
+**Parameters:**
+
+- `user_id: ID!`
+  The unique identifier of the user to be removed.
+
+**Response:**
+Returns the removed `User` object.
+
+**Usage Example:**
+
+```javascript
+const removedUser = removeUser("userId123");
+```
+
+---
+
+#### `removeBook(book_id: ID!): Book`
+
+This mutation removes a book from the system.
+
+**Parameters:**
+
+- `book_id: ID!`
+  The unique identifier of the book to be removed.
+
+**Response:**
+Returns the removed `Book` object.
+
+**Usage Example:**
+
+```javascript
+const removedBook = removeBook("1234567890");
+```
+
+---
+
+#### `removeCommentFromBook(book_id: ID!, comment_id: ID!): Book`
+
+This mutation removes a specific comment from a book.
+
+**Parameters:**
+
+- `book_id: ID!`The unique identifier of the book.
+- `comment_id: ID!`
+  The unique identifier of the comment to be removed.
+
+**Response:**
+Returns the updated `Book` object with the comment removed.
+
+**Usage Example:**
+
+```javascript
+const updatedBook = removeCommentFromBook("1481465589", "commentId123");
+```
+
+---
+
+#### `removePostFromClub(club_id: ID!, post_id: ID!): Club`
+
+This mutation removes a specific post from a club.
+
+**Parameters:**
+
+- `club_id: ID!`The unique identifier of the club.
+- `post_id: ID!`
+  The unique identifier of the post to be removed.
+
+**Response:**
+Returns the updated `Club` object with the post removed.
+
+**Usage Example:**
+
+```javascript
+const updatedClub = removePostFromClub("clubId123", "postId456");
+```
+
+---
+
+#### `removeFriend(user_id: ID!, friend_id: ID!): User`
+
+This mutation removes a friend from the user's friend list.
+
+**Parameters:**
+
+- `user_id: ID!`The unique identifier of the user.
+- `friend_id: ID!`
+  The unique identifier of the friend to be removed.
+
+**Response:**
+Returns the updated `User` object with the friend removed.
+
+**Usage Example:**
+
+```javascript
+const updatedUser = removeFriend("userId123", "friendId456");
+```
+
+---
+
+#### `removeMemberFromClub(club_id: ID!, user_id: ID!): Club`
+
+This mutation removes a member from a club.
+
+**Parameters:**
+
+- `club_id: ID!`The unique identifier of the club.
+- `user_id: ID!`
+  The unique identifier of the user to be removed.
+
+**Response:**
+Returns the updated `Club` object with the member removed.
+
+**Usage Example:**
+
+```javascript
+const updatedClub = removeMemberFromClub("clubId123", "userId456");
 ```
