@@ -25,7 +25,7 @@ const typeDefs = gql`
   }
 
   # Comment Type
-  type Comment { # Converted from Input to Type for queries
+  input CommentInput { # Converted from Input to Type for queries
     _id: ID!
     title: String!
     content: String
@@ -59,14 +59,24 @@ const typeDefs = gql`
   }
 
   # Post Type (related to Club)
-  type Post {
+  input PostInput {
     _id: ID!
     title: String!
     content: String!
     author: User!
     blob: Int # Default value of 0 handled in resolvers
     media: [String!]!
-    comments: [Comment]
+    comments: [CommentInput]
+  }
+  
+  type Post {
+    _id: ID!
+    title: String!
+    content: String!
+    author: User!
+    blob: Int
+    media: [String!]!
+    comments: [Comment!]!
   }
 
   # Discussion Type
