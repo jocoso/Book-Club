@@ -1,4 +1,5 @@
-const { gql } = require('apollo-server-express');
+const { gql } = require('graphql-tag'); // Correct import for gql
+
 
 // Define the GraphQL schema types, queries, and mutations
 const typeDefs = gql`
@@ -23,15 +24,24 @@ const typeDefs = gql`
     comments: [Comment]
     blob: Int! 
   }
-
+  
   # Comment Type
-  input CommentInput { # Converted from Input to Type for queries
+  type Comment {
     _id: ID!
     title: String!
     content: String
     author: User!
-    blob: Int # Default value of 0 handled in resolvers
+    blob: Int
   }
+
+  # Comment Input Type
+  input CommentInput {
+    _id: ID!
+    title: String!
+    content: String
+    author: ID! # Changed from User! to ID!
+    blob: Int
+}
 
   # Review Type
   type Review {
@@ -58,17 +68,6 @@ const typeDefs = gql`
     memberCount: Int
   }
 
-  # Post Type (related to Club)
-  input PostInput {
-    _id: ID!
-    title: String!
-    content: String!
-    author: User!
-    blob: Int # Default value of 0 handled in resolvers
-    media: [String!]!
-    comments: [CommentInput]
-  }
-  
   type Post {
     _id: ID!
     title: String!
@@ -78,6 +77,17 @@ const typeDefs = gql`
     media: [String!]!
     comments: [Comment!]!
   }
+  
+  # Post Input Type
+  input PostInput {
+    _id: ID!
+    title: String!
+    content: String!
+    author: ID! # Changed from User! to ID!
+    blob: Int
+    media: [String!]!
+    comments: [CommentInput]
+}
 
   # Discussion Type
   type Discussion {
