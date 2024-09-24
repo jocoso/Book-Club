@@ -31,9 +31,9 @@ const resolvers = {
         book: async (parent, { _id }) => {
             return Book.findById(_id).populate('reviews').populate('comments');
         },
-        // Get a single book's data by ISBN or ID
+        // Get a single book's data by ISBN 
         getBookData: async (parent, { _id }) => {
-            return Book.findOne({ _id }).populate('reviews').populate('comments');
+            return Book.findOne({ isbn }).populate('reviews').populate('comments');
         },
         // Get all clubs
         clubs: async () => {
