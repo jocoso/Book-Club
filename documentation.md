@@ -1,5 +1,3 @@
-
-
 ## API Documentation
 
 ### **Types**
@@ -14,7 +12,7 @@ A `User` represents a person who interacts with the system. Each user has a uniq
 - `Username: String!`The user's unique name.
 - `Email: String!`The user's email address.
 - `Password: String!`The user's password (hashed).
-- `Reviews: [Comment!]`A list of comments the user has made (optional).
+- `Reviews: [PostInput!]`A list of comments the user has made (optional).
 - `Friends: [User!]`
   A list of the user's friends (optional).
 
@@ -28,6 +26,37 @@ A `Book` represents a book in the system. Each book has an ID and can contain co
 - `Comments: [Comment!]`A list of comments associated with the book (optional).
 - `Blob: Int!`
   A numerical value associated with the book. Defaults to `0`.
+
+#### **Post**
+
+A `Post` is used when creating or modifying a post within a club.
+
+**Fields:**
+
+* `_id: ID!`The unique identifier of the post.
+* `Title: String!`The title of the post.
+* `Content: String!`The body of the post.
+* `Blob: Int`A numerical value associated with the post. Defaults to `0`.
+* `Media: [String!]!`A list of media URLs associated with the post.
+* `Comments: [CommentInput]`A list of comments related to the post (optional).
+
+#### **Club**
+
+A `Club` represents a group of users with shared interests. Each club has a unique ID, a name, and a description. Clubs may have members and posts.
+
+**Fields:**
+
+- `_id: ID!`Unique identifier for the club.
+- `Name: String!`The name of the club.
+- `Img: String`URL for the club's image. Defaults to a default image if not provided.
+- `Description: String!`A brief description of the club.
+- `Founder: User!`The user who created the club.
+- `Members: [User!]!`A list of users who are members of the club.
+- `Posts: [Post!]`
+  A list of posts created within the club.
+
+
+---
 
 ---
 
@@ -46,40 +75,6 @@ A `CommentInput` is used when adding or modifying a comment on a book or post.
 - `Timestamp: String`Date and time when the comment was posted, in string format (optional).
 - `Blob: Int`
   A numerical value associated with the comment. Defaults to `0`.
-
----
-
-#### **PostInput**
-
-A `PostInput` is used when creating or modifying a post within a club.
-
-**Fields:**
-
-- `_id: ID!`Unique identifier for the post.
-- `Title: String!`The title of the post.
-- `Content: String!`The body of the post.
-- `Author: User!`The user who authored the post.
-- `Blob: Int`A numerical value associated with the post. Defaults to `0`.
-- `Media: [String!]!`A list of media URLs associated with the post.
-- `Comments: [CommentInput]`
-  A list of comments related to the post (optional).
-
----
-
-#### **Club**
-
-A `Club` represents a group of users with shared interests. Each club has a unique ID, a name, and a description. Clubs may have members and posts.
-
-**Fields:**
-
-- `_id: ID!`Unique identifier for the club.
-- `Name: String!`The name of the club.
-- `Img: String`URL for the club's image. Defaults to a default image if not provided.
-- `Description: String!`A brief description of the club.
-- `Founder: ID!`Unique identifier of the club's founder (user).
-- `Members: [User!]!`A list of users who are members of the club.
-- `Posts: [Post!]!`
-  A list of posts created within the club.
 
 ---
 

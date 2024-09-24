@@ -4,7 +4,7 @@ const { Book, Club, Comment, Discussion, Post, User } = require('../models');
 const cleanDB = require('./cleanDB');
 
 const userSeeds = require('./userSeeds.json');
-
+const postSeeds = require('./postSeeds.json');
 
 // TODO: Test Seeder
 
@@ -12,6 +12,7 @@ const seeders = [
     //! XXX: Add the schema and seeds in an object with attributes `schema`, `seed`
     // Example: {schema: Book, seed: bookSeeds}
     {name: 'user', schema: User, seed: userSeeds},
+    {name: 'post', schema: Post, seed: postSeeds},
 ]
 
 db.once('open', async() => {
