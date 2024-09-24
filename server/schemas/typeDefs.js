@@ -21,7 +21,6 @@ const typeDefs = gql`
     description: String!
     image: String
     reviews: [Review]
-    comments: [Comment]
     blob: Int! 
   }
   
@@ -48,7 +47,7 @@ const typeDefs = gql`
     _id: ID!
     reviewText: String!
     rating: Int!
-    username: String!
+    user: User!
     bookId: ID!
     createdAt: String
     title: String 

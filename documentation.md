@@ -1,7 +1,5 @@
 
 
----
-
 ## API Documentation
 
 ### **Types**
@@ -19,8 +17,6 @@ A `User` represents a person who interacts with the system. Each user has a uniq
 - `Reviews: [Comment!]`A list of comments the user has made (optional).
 - `Friends: [User!]`
   A list of the user's friends (optional).
-
----
 
 #### **Book**
 
