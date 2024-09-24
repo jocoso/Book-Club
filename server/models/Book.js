@@ -1,4 +1,3 @@
-//Import mongoose
 const { Schema, model } = require('mongoose');
 
 const bookSchema = new Schema(
@@ -18,19 +17,19 @@ const bookSchema = new Schema(
         trim: true,
     },
     image : {
-        type: String, //URL to the book cover image
+        type: String, // URL to the book cover image
         trim: true,
-        required:false
+        required: false
     },
     reviews: [
       {
-        type: Schema.Types.Objectid,
+        type: Schema.Types.ObjectId,
         ref: 'Review',
       }
     ],
     comments: [
       {
-      type: Schema.Types.ObjectId,
+      type: Schema.Types.ObjectId, 
       ref: 'Comment',
       },
     ],
@@ -39,9 +38,8 @@ const bookSchema = new Schema(
       default: 0,
     },
  }, 
-   {
-    toJSON: 
-    {
+ {
+    toJSON: {
       virtuals: true,
     },
   }
