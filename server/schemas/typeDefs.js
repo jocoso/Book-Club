@@ -135,7 +135,6 @@ const typeDefs = gql`
     addPost(title: String!, content: String!, author: ID!, media: [String!]!, blob: Int): Post
     updatePost(_id: ID!, title: String, content: String, media: [String], blob: Int): Post
     deletePost(_id: ID!): Post
-    deleteDiscussion(_id: ID!): Discussion
   }
 `;
 

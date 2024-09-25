@@ -2,7 +2,6 @@ import React from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import Homepage from './components/Homepage';
 import BookClubList from './components/BookClubList';
-import Discussions from './components/Discussions';
 import Reviews from './components/Reviews';
 import UserProfile from './components/UserProfile';
 import logo from './logo.svg';
@@ -31,7 +30,6 @@ function App() {
         <Switch>
           <Route exact path="/" component={Homepage} />
           <Route path="/book-clubs" component={BookClubList} />
-          <Route path="/discussions" component={Discussions} />
           <Route path="/reviews" component={Reviews} />
           <Route path="/user-profile" component={UserProfile} />
         </Switch>

@@ -38,23 +38,15 @@ const resolvers = {
         },
         // Get all clubs
         clubs: async () => {
-            return Club.find().populate('members').populate('posts').populate('discussions');
+            return Club.find().populate('members').populate('posts');
         },
         // Get a single club by ID
         club: async (parent, { _id }) => {
-            return Club.findById(_id).populate('members').populate('posts').populate('discussions');
+            return Club.findById(_id).populate('members').populate('posts');
         },
         // Get all clubs with specific data
         getAllClubs: async () => {
-            return Club.find().populate('members').populate('posts').populate('discussions');
-        },
-        // Get all discussions
-        discussions: async () => {
-            return Discussion.find();
-        },
-        // Get a single discussion by ID
-        discussion: async (parent, { _id }) => {
-            return Discussion.findById(_id);
+            return Club.find().populate('members').populate('posts');
         },
         // Get all reviews
         getAllReviews: async () => {
