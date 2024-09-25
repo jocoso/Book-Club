@@ -1,6 +1,6 @@
 const { AuthenticationError } = require('@apollo/server'); // Replace with proper error handling package if needed
 const { signToken } = require('../utils/auth');
-const { User, Book, Club, Discussion, Comment, Post, Review } = require('../models');
+const { User, Book, Club, Comment, Post, Review } = require('../models');
 
 
 const resolvers = {
@@ -203,24 +203,7 @@ const resolvers = {
         // Delete a post by ID
         deletePost: async (parent, { _id }) => {
             return Post.findByIdAndDelete(_id);
-        },
-        // Add a new discussion to a club
-        addDiscussion: async (parent, { clubId, topic, content }, context) => {
-            if (!context.user) {
-                throw new AuthenticationError('You need to be logged in!');
-            }
-            const discussion = await Discussion.create({ topic, content, username: context.user.username });
-            await Club.findByIdAndUpdate(clubId, { $push: { discussions: discussion._id } });
-            return discussion;
-        },
-        // Update a discussion by ID
-        updateDiscussion: async (parent, { _id, topic, content }) => {
-            return Discussion.findByIdAndUpdate(_id, { topic, content }, { new: true });
-        },
-        // Delete a discussion by ID
-        deleteDiscussion: async (parent, { _id }) => {
-            return Discussion.findByIdAndDelete(_id);
-        },
+        }
     },
 };
 

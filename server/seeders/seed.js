@@ -1,6 +1,10 @@
 const db = require('../config/connection');
 
-const { Book, Club, Comment, Discussion, Post, User } = require('../models');
+// Abduh - Comments
+// Marquan - Book & Clubs
+// Josh - Post
+
+const { Book, Club, Comment, Post, User } = require('../models');
 const cleanDB = require('./cleanDB');
 
 const userSeeds = require('./userSeeds.json');

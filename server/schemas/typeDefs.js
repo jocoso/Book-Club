@@ -106,8 +106,6 @@ const typeDefs = gql`
     clubs: [Club]
     club(_id: ID!): Club
     getAllClubs: [Club]
-    discussions: [Discussion]
-    discussion(_id: ID!): Discussion
     getAllReviews: [Review]
     getUserWishcart(user_Id: ID!): [Book]
   }
@@ -137,8 +135,6 @@ const typeDefs = gql`
     addPost(title: String!, content: String!, author: ID!, media: [String!]!, blob: Int): Post
     updatePost(_id: ID!, title: String, content: String, media: [String], blob: Int): Post
     deletePost(_id: ID!): Post
-    addDiscussion(clubId: ID!, topic: String!, content: String!): Discussion
-    updateDiscussion(_id: ID!, topic: String, content: String): Discussion
     deleteDiscussion(_id: ID!): Discussion
   }
 `;
