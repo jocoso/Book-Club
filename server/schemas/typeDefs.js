@@ -70,6 +70,7 @@ const typeDefs = gql`
     _id: ID!
     title: String!
     content: String!
+    club: Club!
     author: User!
     blob: Int
     media: [String!]
@@ -132,8 +133,8 @@ const typeDefs = gql`
     addClub(name: String!, description: String!, img: String, founder: ID!): Club
     updateClub(_id: ID!, clubName: String, description: String, img: String): Club
     deleteClub(_id: ID!): Club
-    addPost(title: String!, content: String!, author: ID!, media: [String!]!, blob: Int): Post
-    updatePost(_id: ID!, title: String, content: String, media: [String], blob: Int): Post
+    addPost(title: String!, content: String!, parentClub: ID!, author: ID!, media: [String!], blob: Int): Post
+    updatePost(_id: ID!, title: String, content: String, media: [String!], blob: Int): Post
     deletePost(_id: ID!): Post
   }
 `;

@@ -16,9 +16,10 @@ const clubSchema = new Schema(
     img: {
       type: String,
       trim: true,
+      required: false,
       validate: {
         validator: function(v) {
-          return /^(ftp|http|https):\/\/[^ "]+$/.test(v);
+          return (!v) || /^(ftp|http|https):\/\/[^ "]+$/.test(v);
         },
         message: props => `${props.value} is not a valid URL!`,
       },

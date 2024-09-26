@@ -10,6 +10,11 @@ const postSchema = new Schema(
             type: String,
             required: true,
         },
+        parentClub: {
+            type: Schema.Types.ObjectId,
+            ref: 'Club',
+            required: true,
+        },
         author: {
             type: Schema.Types.ObjectId,
             ref: 'User',

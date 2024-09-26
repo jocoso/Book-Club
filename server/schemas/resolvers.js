@@ -185,8 +185,8 @@ const resolvers = {
             return Club.findByIdAndDelete(_id);
         },
         // Add a new post to a club
-        addPost: async (parent, { title, content, author, media, blob }) => {
-            return Post.create({ title, content, author, media, blob });
+        addPost: async (parent, { title, content, parentClub, author, media, blob }) => {
+            return Post.create({ title, content, parentClub, author, media, blob });
         },
         // Update a post by ID
         updatePost: async (parent, { _id, title, content, media, blob }) => {
