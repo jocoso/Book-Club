@@ -1,4 +1,5 @@
-const { gql } = require('apollo-server');
+const { gql } = require('graphql-tag');
+
 
 const typeDefs = gql`
   # User Type
@@ -107,6 +108,9 @@ const typeDefs = gql`
     clubs: [Club]
     club(_id: ID!): Club
     getAllClubs: [Club]
+    comments: [Comment]
+    comment(_id: ID!): Comment
+    commentsByBook(bookId: ID!): [Comment]
     getAllReviews: [Review]
     getUserWishcart(user_Id: ID!): [Book]
   }
