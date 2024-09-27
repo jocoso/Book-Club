@@ -17,7 +17,7 @@ const server = new ApolloServer({
     resolvers,
 });
 
-const librarian = new Librarian('https://api.google.book.example.com');
+const librarian = new Librarian('https://www.googleapis.com/books/v1/volumes?q=isbn:');
 
 // Async function to start the Apollo Server and apply middleware
 const startApolloServer = async () => {
