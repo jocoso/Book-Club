@@ -14,8 +14,9 @@ class Librarian {
     }
     async fetcher(bookId) {
         try {
-            const response = await axios.get(`${this.apiUrl}/${bookId}`);
-            return response.data.volumeInfo;
+            const response = await axios.get(`${this.apiUrl}?q=${bookId}`);
+            // console.log("rest", response.data.items[0].volumeInfo)
+            return response.data.items[0].volumeInfo;
         } catch (error) {
             console.error(`Failed to fetch book data for ID: ${bookId}`, error);
             return null;

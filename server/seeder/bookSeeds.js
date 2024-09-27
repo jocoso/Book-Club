@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
-const Librarian = require('./utils/Librarian');
-const Book = require('./models/Book');
+const Librarian = require('../utils/librarian');
+const Book = require('../models/Book');
 
 //Connect to the mongodb database
 mongoose.connect('mongodb://localhost:27017/bookclub', { useNewUrlParser: true, useUnifiedTopology: true });
@@ -10,18 +10,23 @@ const librarian = new Librarian('https://www.googleapis.com/books/v1/volumes');
 
 async function seedBooks(bookIds) {
     try {
-        for (const bookId of bookIds) {
-            const bookData = await librarian.retrieve(bookId);
+        for (const bookId of bookIds)
+         { 
+            console.log(bookIds)
+            const bookData = await librarian.retrieve(bookId); 
             if (bookData) {
+                console.log(bookData)
                 const newBook = new Book({
                     title: bookData.title,
-                    author: bookData.authors.join(', '),
+                    author: bookData.author, 
+                    // this is not the way to go about the authors, maybe DO If 
                     description: bookData.description,
-                    image:bookData.imageLinks?.thumbnail,
+                    image: bookData.imageLinks?.thumbnail,
                     isbn: bookData.industryIdentifiers.find(id => id.type === 'ISBN_13')?.identifier || bookId,
                 });
+                
                 await newBook.save();
-                consosle.log(`Saved book: ${newBook.title}`);
+                console.log(`Saved book: ${newBook.title}`);
             }
         }
     } catch (err) {
