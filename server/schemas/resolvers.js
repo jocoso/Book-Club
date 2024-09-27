@@ -26,15 +26,15 @@ const resolvers = {
         },
         // Get all books
         books: async () => {
-            return Book.find().populate('reviews').populate('comments');
+            return Book.find();
         },
         // Get a single book by ID
         book: async (parent, { _id }) => {
-            return Book.findById(_id).populate('reviews').populate('comments');
+            return Book.findById(_id);
         },
         // Get a single book's data by ISBN 
         getBookData: async (parent, { isbn }) => {
-            return Book.findOne({ isbn }).populate('reviews').populate('comments');
+            return Book.findOne({ isbn });
         },
         // Get all clubs
         clubs: async () => {
@@ -62,7 +62,7 @@ const resolvers = {
         },
         // Get user's wishcart
         getUserWishcart: async (parent, { user_Id }) => {
-            return Book.find({ _id: { $in: user_Id } }).populate('comments').populate('reviews');
+            return Book.find({ _id: { $in: user_Id } });
         },
     },
     Mutation: {
@@ -141,21 +141,21 @@ const resolvers = {
             return user.populate('friends').execPopulate();
         },
         // Add a new book
-        addBook: async (parent, { title, author, description, image, isbn }) => {
+        addBook: async (parent, { isbn, blob}) => {
             const bookExists = await Book.findOne({ isbn });
             if (bookExists) {
               throw new Error('Book with this ISBN already exists.');
             }
-            const newBook = await Book.create({ title, author, description, image, isbn });
+            const newBook = await Book.create({ isbn, blob });
             return newBook;
         },
         // Update a book's data
-        updateBook: async (parent, { _id, title, author, description, image }) => {
-            return Book.findByIdAndUpdate(_id, { title, author, description, image }, { new: true });
+        updateBook: async (parent, { isbn, blob  }) => {
+            return Book.findByIdAndUpdate(isbn, { blob  }, { new: true });
         },
         // Delete a book by ID
-        deleteBook: async (parent, { _id }) => {
-            return Book.findByIdAndDelete(_id);
+        deleteBook: async (parent, { isbn }) => {
+            return Book.findByIdAndDelete(isbn);
         },
         // Add a new review to a book
         addReview: async (parent, { bookId, reviewText, rating }) => {

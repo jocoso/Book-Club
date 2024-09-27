@@ -15,14 +15,8 @@ const typeDefs = gql`
 
   # Book Type
   type Book {
-    _id: ID!
-    title: String!
-    author: String!
-    description: String!
-    image: String
-    reviews: [Review]
-    comments: [Comment]
-    blob: Int! 
+    isbn: Int!
+    blob: Int
   }
   
   # Comment Type

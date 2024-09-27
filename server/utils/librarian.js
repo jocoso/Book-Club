@@ -10,7 +10,8 @@ class Librarian {
     validate(bookId) {
         // return true if endPoint is valid
         // return false;
-        return /^[a-zA-Z0-9_-]{10,}$/.test(bookId);
+        // return /^[a-zA-Z0-9_-]{10,}$/.test(bookId);
+        return true
     }
     async fetcher(bookId) {
         try {
