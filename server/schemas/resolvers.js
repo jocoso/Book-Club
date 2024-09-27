@@ -1,6 +1,6 @@
 const { AuthenticationError } = require('@apollo/server'); // Replace with proper error handling package if needed
 const { signToken } = require('../utils/auth');
-const { User, Book, Club, Discussion, Comment, Post, Review } = require('../models');
+const { User, Book, Club, Comment, Post, Review } = require('../models');
 
 
 const resolvers = {
@@ -33,7 +33,7 @@ const resolvers = {
             return Book.findById(_id).populate('reviews').populate('comments');
         },
         // Get a single book's data by ISBN 
-        getBookData: async (parent, { _id }) => {
+        getBookData: async (parent, { isbn }) => {
             return Book.findOne({ isbn }).populate('reviews').populate('comments');
         },
         // Get all clubs
@@ -141,8 +141,13 @@ const resolvers = {
             return user.populate('friends').execPopulate();
         },
         // Add a new book
-        addBook: async (parent, args) => {
-            return Book.create(args);
+        addBook: async (parent, { title, author, description, image, isbn }) => {
+            const bookExists = await Book.findOne({ isbn });
+            if (bookExists) {
+              throw new Error('Book with this ISBN already exists.');
+            }
+            const newBook = await Book.create({ title, author, description, image, isbn });
+            return newBook;
         },
         // Update a book's data
         updateBook: async (parent, { _id, title, author, description, image }) => {
