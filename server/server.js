@@ -6,10 +6,15 @@ const { typeDefs, resolvers } = require("./schemas"); // Import GraphQL schema d
 const db = require("./config/connection"); // Import MongoDB connection configuration
 const { authMiddleware } = require("./utils/auth"); // Import authentication middleware
 const Librarian = require('./utils/librarian');
+const profileRoutes = require('./routes/profile');
+
 
 
 const PORT = process.env.PORT || 3001; // Define the server port, defaulting to 3001
 const app = express(); // Create an instance of the Express app
+
+app.use('/api', profileRoutes); // Use profile routes under the /api path
+
 
 // Initialize an Apollo Server with type definitions and resolvers
 const server = new ApolloServer({
