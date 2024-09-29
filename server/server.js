@@ -1,3 +1,5 @@
+require('dotenv').config(); // Load environment variables at the top
+
 const express = require("express"); // Import the Express framework
 const { ApolloServer } = require("@apollo/server"); // Import Apollo Server from the latest package
 const { expressMiddleware } = require("@apollo/server/express4"); // Import the Express middleware integration for Apollo Server
@@ -8,13 +10,10 @@ const { authMiddleware } = require("./utils/auth"); // Import authentication mid
 const Librarian = require('./utils/librarian');
 const profileRoutes = require('./routes/profile');
 
-
-
 const PORT = process.env.PORT || 3001; // Define the server port, defaulting to 3001
 const app = express(); // Create an instance of the Express app
 
 app.use('/api', profileRoutes); // Use profile routes under the /api path
-
 
 // Initialize an Apollo Server with type definitions and resolvers
 const server = new ApolloServer({
@@ -58,20 +57,20 @@ const startApolloServer = async () => {
                 try {
                     const data = await librarian.getBook(`/${endpoint}`);
                     res.status(200).json(data);
-                }catch(err) {
-                    res.status(500).json({ message: 'Failed to fetch book'});
+                } catch (err) {
+                    res.status(500).json({ message: 'Failed to fetch book' });
                 }
-            })
-            
-           // Protected route to get user profile
-                 router.get('/profile', authMiddleware, (req, res) => {
+            });
+
+            // Protected route to get user profile
+            router.get('/profile', authMiddleware, (req, res) => {
                 if (!req.user) {
-                return res.status(401).json({ msg: 'Unauthorized' });
+                    return res.status(401).json({ msg: 'Unauthorized' });
                 }
-  
-    // If authenticated, return user data
-    res.json({ user: req.user });
-  });
+
+                // If authenticated, return user data
+                res.json({ user: req.user });
+            });
         }
 
         // Start the server and connect to the MongoDB database

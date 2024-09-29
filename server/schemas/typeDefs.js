@@ -13,7 +13,7 @@ const typeDefs = gql`
 
   # Book Type
   type Book {
-  _id: ID!
+  isbn: ID!
   blob: Int
 }
   
@@ -99,8 +99,8 @@ const typeDefs = gql`
     me: User
     getUser(email: String!): User
     books: [Book]
-    book(_id: ID!): Book
-    getBookData(_id: ID!): Book
+    book(isbn: ID!): Book
+    getBookData(isbn: ID!): Book
     clubs: [Club]
     club(_id: ID!): Club
     getAllClubs: [Club]
@@ -130,7 +130,7 @@ const typeDefs = gql`
 
     # Book Mutations
     addBook(_id: String!, blob: Int): Book
-    updateBook(blob: Int): Book
+    updateBook(isbn: ID, blob: Int): Book
     deleteBook(_id: ID!): Book
 
     # Review Mutations
