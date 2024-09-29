@@ -62,6 +62,16 @@ const startApolloServer = async () => {
                     res.status(500).json({ message: 'Failed to fetch book'});
                 }
             })
+            
+           // Protected route to get user profile
+                 router.get('/profile', authMiddleware, (req, res) => {
+                if (!req.user) {
+                return res.status(401).json({ msg: 'Unauthorized' });
+                }
+  
+    // If authenticated, return user data
+    res.json({ user: req.user });
+  });
         }
 
         // Start the server and connect to the MongoDB database

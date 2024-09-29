@@ -2,8 +2,8 @@ const { Schema, model } = require('mongoose');
 
 const bookSchema = new Schema(
 {
-  isbn:{
-    type: Number, 
+   _id:{
+    type: String, 
     require: true, 
     unique: true
   },

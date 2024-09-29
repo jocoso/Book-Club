@@ -16,7 +16,6 @@ const typeDefs = gql`
   # Book Type
   type Book {
   _id: ID!
-  isbn: Int!
   blob: Int
 }
   
@@ -43,13 +42,8 @@ const typeDefs = gql`
     _id: ID!
     reviewText: String!
     rating: Int!
-<<<<<<< HEAD
-    user: User
-    book: Book
-=======
-    username: User!
+    username: User! 
     bookId: ID!
->>>>>>> 66d79dd5c22a5fa1f32fc5f8391663c53db17a0b
     createdAt: String
     title: String 
     content: String 
@@ -87,17 +81,9 @@ const typeDefs = gql`
     blob: Int
     media: [String!]!
     comments: [CommentInput]
-}
-
-  # Discussion Type
-  type Discussion {
-    _id: ID!
-    topic: String!
-    content: String!
-    username: String!
-    createdAt: String
   }
 
+  
   # Auth Type
   type Auth {
     token: ID!
@@ -122,10 +108,6 @@ const typeDefs = gql`
     club(_id: ID!): Club
     getAllClubs: [Club]
 
-    # Discussion Queries
-    discussions: [Discussion]
-    discussion(_id: ID!): Discussion
-
     # Review Queries
     getAllReviews: [Review] 
     review(_id: ID!): Review
@@ -147,8 +129,8 @@ const typeDefs = gql`
     addFriend(user_Id: ID!, friend_Id: ID!): [User]
 
     # Book Mutations
-    addBook(title: String!, author: String!, description: String!, image: String): Book
-    updateBook(_id: ID!, title: String, author: String, description: String, image: String): Book
+    addBook(_id: String!, blob: Int): Book
+    updateBook(blob: Int): Book
     deleteBook(_id: ID!): Book
 
     # Review Mutations
@@ -171,11 +153,7 @@ const typeDefs = gql`
     addPost(title: String!, content: String!, author: ID!, media: [String!]!, blob: Int): Post
     updatePost(_id: ID!, title: String, content: String, media: [String], blob: Int): Post
     deletePost(_id: ID!): Post
-
-    # Discussion Mutations
-    addDiscussion(clubId: ID!, topic: String!, content: String!): Discussion
-    updateDiscussion(_id: ID!, topic: String, content: String): Discussion
-    deleteDiscussion(_id: ID!): Discussion
+    
   }
 `;
 

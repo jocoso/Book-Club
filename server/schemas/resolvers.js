@@ -33,34 +33,27 @@ const resolvers = {
             return Book.findById(_id);
         },
         // Get a single book's data by ISBN 
-        getBookData: async (parent, { isbn }) => {
-            return Book.findOne({ isbn });
+        getBookData: async (parent, { _id }) => {
+            return Book.findOne({ _id });
         },
         // Get all clubs
         clubs: async () => {
-            return Club.find().populate('members').populate('posts').populate('discussions');
+            return Club.find().populate('members').populate('posts');
         },
         // Get a single club by ID
         club: async (parent, { _id }) => {
-            return Club.findById(_id).populate('members').populate('posts').populate('discussions');
+            return Club.findById(_id).populate('members').populate('posts');
         },
         // Get all clubs with specific data
         getAllClubs: async () => {
-            return Club.find().populate('members').populate('posts').populate('discussions');
+            return Club.find().populate('members').populate('posts');
         },
-        // Get all discussions
-        discussions: async () => {
-            return Discussion.find();
-        },
-        // Get a single discussion by ID
-        discussion: async (parent, { _id }) => {
-            return Discussion.findById(_id);
-        },
+        
         // Get all reviews
         getAllReviews: async () => {
             return Review.find().populate({
               path: 'book',
-              select: '_id isbn blob', // Ensure the fields to be selected
+              select: '_id blob', // Ensure the fields to be selected
             }).populate('user');
           },
         // Get a single review by ID
@@ -148,21 +141,21 @@ const resolvers = {
             return user.populate('friends').execPopulate();
         },
         // Add a new book
-        addBook: async (parent, { isbn, blob}) => {
-            const bookExists = await Book.findOne({ isbn });
+        addBook: async (parent, { _id, blob}) => {
+            const bookExists = await Book.findOne({ _id });
             if (bookExists) {
               throw new Error('Book with this ISBN already exists.');
             }
-            const newBook = await Book.create({ isbn, blob });
+            const newBook = await Book.create({ _id, blob });
             return newBook;
         },
         // Update a book's data
-        updateBook: async (parent, { isbn, blob  }) => {
-            return Book.findByIdAndUpdate(isbn, { blob  }, { new: true });
+        updateBook: async (parent, {_id, blob  }) => {
+            return Book.findByIdAndUpdate(_id, { blob  }, { new: true });
         },
         // Delete a book by ID
-        deleteBook: async (parent, { isbn }) => {
-            return Book.findByIdAndDelete(isbn);
+        deleteBook: async (parent, { _id }) => {
+            return Book.findByIdAndDelete(_id);
         },
         // Add a new review to a book
         addReview: async (parent, { bookId, reviewText, rating, user, title, content, inks }) => {
@@ -259,23 +252,7 @@ const resolvers = {
         deletePost: async (parent, { _id }) => {
             return Post.findByIdAndDelete(_id);
         },
-        // Add a new discussion to a club
-        addDiscussion: async (parent, { clubId, topic, content }, context) => {
-            if (!context.user) {
-                throw new AuthenticationError('You need to be logged in!');
-            }
-            const discussion = await Discussion.create({ topic, content, username: context.user.username });
-            await Club.findByIdAndUpdate(clubId, { $push: { discussions: discussion._id } });
-            return discussion;
-        },
-        // Update a discussion by ID
-        updateDiscussion: async (parent, { _id, topic, content }) => {
-            return Discussion.findByIdAndUpdate(_id, { topic, content }, { new: true });
-        },
-        // Delete a discussion by ID
-        deleteDiscussion: async (parent, { _id }) => {
-            return Discussion.findByIdAndDelete(_id);
-        },
+        
     },
 };
 
