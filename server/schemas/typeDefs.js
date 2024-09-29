@@ -1,7 +1,8 @@
 const { gql } = require('graphql-tag');
 
-
 const typeDefs = gql`
+  scalar Date
+
   # User Type
   type User {
     _id: ID!
@@ -13,10 +14,11 @@ const typeDefs = gql`
 
   # Book Type
   type Book {
-  isbn: ID!
-  blob: Int
-}
-  
+    _id: ID!
+    isbn: String!
+    blob: Int
+  }
+
   # Comment Type
   type Comment {
     _id: ID!
@@ -24,8 +26,8 @@ const typeDefs = gql`
     content: String
     author: User!
     blob: Int
-    createdAt: String
-    updatedAt: String
+    createdAt: Date
+    updatedAt: Date
   }
 
   # Comment Input Type
@@ -43,10 +45,10 @@ const typeDefs = gql`
     rating: Int!
     user: User!
     bookId: ID!
-    createdAt: String
+    createdAt: Date
     title: String
     content: String 
-    inks: Int # Added to match group's "Inks (likes)" field
+    inks: Int
   }
 
   # Club Type
@@ -71,8 +73,8 @@ const typeDefs = gql`
     blob: Int
     media: [String!]
     comments: [Comment!]!
-    createdAt: String
-    updatedAt: String
+    createdAt: Date
+    updatedAt: Date
   }
 
   # Post Input Type
@@ -85,7 +87,6 @@ const typeDefs = gql`
     comments: [CommentInput]
   }
 
-  
   # Auth Type
   type Auth {
     token: ID!
@@ -99,7 +100,7 @@ const typeDefs = gql`
     me: User
     getUser(email: String!): User
     books: [Book]
-    book(isbn: ID!): Book
+    book(_id: ID!): Book
     getBookData(isbn: ID!): Book
     clubs: [Club]
     club(_id: ID!): Club
@@ -107,10 +108,9 @@ const typeDefs = gql`
     comments: [Comment]
     comment(_id: ID!): Comment
     commentsByBook(bookId: ID!): [Comment]
-    getAllReviews: [Review]
 
     # Review Queries
-    getAllReviews: [Review] 
+    getAllReviews: [Review]
     review(_id: ID!): Review
 
     # User's wishcart (for books)
@@ -122,34 +122,36 @@ const typeDefs = gql`
     addUser(username: String!, email: String!, password: String!): Auth
     login(email: String!, password: String!): Auth
     updateUser(_id: ID!, username: String, email: String, password: String): User
-    deleteUser(_id: ID!): User
+    deleteUser(_id: ID!): Boolean
     updatePassword(_id: ID!, lastPassword: String!, newPassword: String!): User
     updateUsername(_id: ID!, newUserName: String!): User
     updateEmail(_id: ID!, newEmail: String!): User
-    addFriend(user_Id: ID!, friend_Id: ID!): [User]
+    addFriend(user_Id: ID!, friend_Id: ID!): User
 
     # Book Mutations
-    addBook(_id: String!, blob: Int): Book
-    updateBook(isbn: ID, blob: Int): Book
-    deleteBook(_id: ID!): Book
+    addBook(_id: ID!, blob: Int): Book
+    updateBook(_id: ID, blob: Int): Book
+    deleteBook(_id: ID!): Boolean
 
     # Review Mutations
     addReview(bookId: ID!, reviewText: String!, rating: Int!, user: ID!, title: String, content: String, inks: Int): Review
     updateReview(_id: ID!, reviewText: String, rating: Int, title: String, content: String, inks: Int): Review
-    deleteReview(_id: ID!): Review
+    deleteReview(_id: ID!): Boolean
 
-
-    # Comment Mutations (related to Book and Post)
+    # Comment Mutations
     addComment(title: String!, content: String, author: ID!, blob: Int): Comment
     updateComment(_id: ID!, title: String, content: String, blob: Int): Comment
-    deleteComment(_id: ID!): Comment
+    deleteComment(_id: ID!): Boolean
+
+    # Club Mutations
     addClub(name: String!, description: String!, img: String, founder: ID!): Club
-    updateClub(_id: ID!, clubName: String, description: String, img: String): Club
-    deleteClub(_id: ID!): Club
-    addPost(title: String!, content: String!, parentClub: ID!, author: ID!, media: [String!], blob: Int): Post
+    updateClub(_id: ID!, name: String, description: String, img: String): Club
+    deleteClub(_id: ID!): Boolean
+
+    # Post Mutations
+    addPost(title: String!, content: String!, club: ID!, author: ID!, media: [String!], blob: Int): Post
     updatePost(_id: ID!, title: String, content: String, media: [String!], blob: Int): Post
-    deletePost(_id: ID!): Post
-    
+    deletePost(_id: ID!): Boolean
   }
 `;
 
