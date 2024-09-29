@@ -78,9 +78,9 @@ const seeders = [
     //! XXX: Add the schema and seeds in an object with attributes `schema`, `seed`
     // Example: {schema: Book, seed: bookSeeds}
     { schema: Book, seed: bookSeeds },
-    // { schema: User, seed: userSeeds },
+    { schema: User, seed: userSeeds },
     { schema: Review, seed: reviewSeeds },
-    // { schema: Club, seed: clubSeeds },
+    { schema: Club, seed: clubSeeds },
 ]
 
 db.once('open', async() => {
