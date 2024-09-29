@@ -1,8 +1,11 @@
 import ReactDOM from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import React, { Suspense } from 'react';
 
 import App from './App.js'
-import { Homepage, Error } from "./pages";
+
+const Homepage = React.lazy(() => import('./pages/Homepage.jsx'));
+const Error = React.lazy(() => import('./pages/Error.jsx'));
 
 const router = createBrowserRouter([
     {
@@ -19,5 +22,7 @@ const router = createBrowserRouter([
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")).render(
-    <RouterProvider router={router} />
+    <Suspense fallback={<div>Loading...</div>}>
+        <RouterProvider router={router} />
+    </Suspense>
 );
