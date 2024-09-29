@@ -13,15 +13,10 @@ const typeDefs = gql`
 
   # Book Type
   type Book {
-    _id: ID!
-    title: String!
-    author: String!
-    description: String!
-    image: String
-    reviews: [Review]
-    blob: Int! 
-  }
-
+  _id: ID!
+  blob: Int
+}
+  
   # Comment Type
   type Comment {
     _id: ID!
@@ -90,6 +85,7 @@ const typeDefs = gql`
     comments: [CommentInput]
   }
 
+  
   # Auth Type
   type Auth {
     token: ID!
@@ -112,6 +108,12 @@ const typeDefs = gql`
     comment(_id: ID!): Comment
     commentsByBook(bookId: ID!): [Comment]
     getAllReviews: [Review]
+
+    # Review Queries
+    getAllReviews: [Review] 
+    review(_id: ID!): Review
+
+    # User's wishcart (for books)
     getUserWishcart(user_Id: ID!): [Book]
   }
 
@@ -125,12 +127,19 @@ const typeDefs = gql`
     updateUsername(_id: ID!, newUserName: String!): User
     updateEmail(_id: ID!, newEmail: String!): User
     addFriend(user_Id: ID!, friend_Id: ID!): [User]
-    addBook(title: String!, author: String!, description: String!, image: String): Book
-    updateBook(_id: ID!, title: String, author: String, description: String, image: String): Book
+
+    # Book Mutations
+    addBook(_id: String!, blob: Int): Book
+    updateBook(blob: Int): Book
     deleteBook(_id: ID!): Book
-    addReview(bookId: ID!, reviewText: String!, rating: Int!): Review
-    updateReview(_id: ID!, reviewText: String, rating: Int): Review
+
+    # Review Mutations
+    addReview(bookId: ID!, reviewText: String!, rating: Int!, user: ID!, title: String, content: String, inks: Int): Review
+    updateReview(_id: ID!, reviewText: String, rating: Int, title: String, content: String, inks: Int): Review
     deleteReview(_id: ID!): Review
+
+
+    # Comment Mutations (related to Book and Post)
     addComment(title: String!, content: String, author: ID!, blob: Int): Comment
     updateComment(_id: ID!, title: String, content: String, blob: Int): Comment
     deleteComment(_id: ID!): Comment
@@ -140,6 +149,7 @@ const typeDefs = gql`
     addPost(title: String!, content: String!, parentClub: ID!, author: ID!, media: [String!], blob: Int): Post
     updatePost(_id: ID!, title: String, content: String, media: [String!], blob: Int): Post
     deletePost(_id: ID!): Post
+    
   }
 `;
 

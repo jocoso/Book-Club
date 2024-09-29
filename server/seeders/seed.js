@@ -1,22 +1,24 @@
 const db = require('../config/connection');
-
-// Abduh - Comments
-// Marquan - Book & Clubs
-// Josh - Post
-
-const { Book, Club, Comment, Post, User } = require('../models');
-const cleanDB = require('./cleanDB');
-
+const bookSeeds = require('./bookSeeds.json');  //Adjust path if necessary
+const reviewSeeds = require('./reviewSeeds.json'); // Adjust path if necessary
 const userSeeds = require('./userSeeds.json');
 const clubSeeds = require('./clubSeeds.json');
+const { Book, Club, Comment, Post, User, Review } = require('../models');
+const cleanDB = require('./cleanDB');
+
+
 
 // TODO: Test Seeder
 
 const seeders = [
     //! XXX: Add the schema and seeds in an object with attributes `schema`, `seed`
     // Example: {schema: Book, seed: bookSeeds}
-    {name: 'user', schema: User, seed: userSeeds},
-    {name: 'club', schema: Club, seed: clubSeeds},
+    {name:'book', schema: Book, seed: bookSeeds },
+    {name:'user', schema: User, seed: userSeeds },
+    {name: 'review', schema: Review, seed: reviewSeeds },
+    {name:'clubs', schema: Club, seed: clubSeeds },
+    {name:'post', schema: Post, seed: postSeeds },
+    {name:'comment', schema: Comment, seed: commentSeeds },
 ]
 
 db.once('open', async() => {
