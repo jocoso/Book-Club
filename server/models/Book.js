@@ -7,6 +7,18 @@ const bookSchema = new Schema(
       required: true, // Corrected the typo here
       unique: true
     },
+    title: {
+      type: String
+    },
+    author: {
+      type: String
+    },
+    description: {
+      type: String
+    },
+    image: {
+      type: String
+    },
     blob: {
       type: Number,
       default: 0,

@@ -7,7 +7,9 @@ const resolvers = {
         // Get all users
         users: async () => {
             try {
-                return await User.find().populate("booksRead").populate("friends");
+                return await User.find()
+                    .populate("booksRead")
+                    .populate("friends");
             } catch (err) {
                 throw new Error("Failed to fetch users");
             }
@@ -15,7 +17,9 @@ const resolvers = {
         // Get a single user by ID
         user: async (parent, { _id }) => {
             try {
-                return await User.findById(_id).populate("booksRead").populate("friends");
+                return await User.findById(_id)
+                    .populate("booksRead")
+                    .populate("friends");
             } catch (err) {
                 throw new Error("Failed to fetch user");
             }
@@ -36,7 +40,9 @@ const resolvers = {
         // Get a single user by email
         getUser: async (parent, { email }) => {
             try {
-                return await User.findOne({ email }).populate("booksRead").populate("friends");
+                return await User.findOne({ email })
+                    .populate("booksRead")
+                    .populate("friends");
             } catch (err) {
                 throw new Error("Failed to fetch user by email");
             }
@@ -68,7 +74,9 @@ const resolvers = {
         // Get a single club by ID
         club: async (parent, { _id }) => {
             try {
-                return await Club.findById(_id).populate("members").populate("posts");
+                return await Club.findById(_id)
+                    .populate("members")
+                    .populate("posts");
             } catch (err) {
                 throw new Error("Failed to fetch club");
             }
@@ -144,7 +152,11 @@ const resolvers = {
             }
         },
         // Update user data
-        updateUser: async (parent, { _id, username, email, password }, context) => {
+        updateUser: async (
+            parent,
+            { _id, username, email, password },
+            context
+        ) => {
             if (!context.user || context.user._id !== _id) {
                 throw new AuthenticationError("Not authorized");
             }
@@ -154,7 +166,9 @@ const resolvers = {
                 if (email) updateFields.email = email;
                 if (password) updateFields.password = password;
 
-                return await User.findByIdAndUpdate(_id, updateFields, { new: true });
+                return await User.findByIdAndUpdate(_id, updateFields, {
+                    new: true,
+                });
             } catch (err) {
                 throw new Error("Failed to update user");
             }
@@ -171,7 +185,11 @@ const resolvers = {
             }
         },
         // Update user password
-        updatePassword: async (parent, { _id, lastPassword, newPassword }, context) => {
+        updatePassword: async (
+            parent,
+            { _id, lastPassword, newPassword },
+            context
+        ) => {
             if (!context.user || context.user._id !== _id) {
                 throw new AuthenticationError("Not authorized");
             }
@@ -207,21 +225,38 @@ const resolvers = {
             }
         },
         // Add a new book
-        addBook: async (parent, { _id, blob }) => {
+        addBook: async (
+            parent,
+            { _id, blob, title, author, description, image }
+        ) => {
             try {
                 const bookExists = await Book.findOne({ _id });
                 if (bookExists) {
                     throw new Error("Book with this ISBN already exists.");
                 }
-                return await Book.create({ _id, blob });
+                return await Book.create({
+                    _id,
+                    blob,
+                    title,
+                    author,
+                    description,
+                    image,
+                });
             } catch (err) {
                 throw new Error("Failed to add book");
             }
         },
         // Update a book's data
-        updateBook: async (parent, { isbn, blob }) => {
+        updateBook: async (
+            parent,
+            { isbn, blob, title, author, description, image }
+        ) => {
             try {
-                return await Book.findByIdAndUpdate(isbn, { blob }, { new: true });
+                return await Book.findByIdAndUpdate(
+                    isbn,
+                    { blob, title, author, description, image },
+                    { new: true }
+                );
             } catch (err) {
                 throw new Error("Failed to update book");
             }
@@ -235,7 +270,10 @@ const resolvers = {
             }
         },
         // Add a new review to a book
-        addReview: async (parent, { bookId, reviewText, rating, user, title, content, inks }) => {
+        addReview: async (
+            parent,
+            { bookId, reviewText, rating, user, title, content, inks }
+        ) => {
             try {
                 const book = await Book.findById(bookId);
                 if (!book) {
@@ -267,150 +305,167 @@ const resolvers = {
             }
         },
         // Update a review by ID
-        updateReview: async (parent, { _id, reviewText, rating, title, content, inks }) => {
+        updateReview: async (
+            parent,
+            { _id, reviewText, rating, title, content, inks }
+        ) => {
             try {
                 const updateFields = {};
-                if (reviewText !== undefined) updateFields.reviewText = reviewText;
+                if (reviewText !== undefined)
+                    updateFields.reviewText = reviewText;
                 if (rating !== undefined) updateFields.rating = rating;
                 if (title !== undefined) updateFields.title = title;
                 if (content !== undefined) updateFields.content = content;
                 if (inks !== undefined) updateFields.inks = inks;
 
-                return await Review.findByIdAndUpdate(_id, updateFields, { new: true })
-                .populate("user")
-                .populate("book");
-        } catch (err) {
-            throw new Error("Failed to update review");
-        }
+                return await Review.findByIdAndUpdate(_id, updateFields, {
+                    new: true,
+                })
+                    .populate("user")
+                    .populate("book");
+            } catch (err) {
+                throw new Error("Failed to update review");
+            }
+        },
+        // Delete a review by ID
+        deleteReview: async (parent, { _id }) => {
+            try {
+                return await Review.findByIdAndDelete(_id);
+            } catch (err) {
+                throw new Error("Failed to delete review");
+            }
+        },
+        // Add a new comment to a post or book
+        addComment: async (parent, { title, content, author, blob }) => {
+            try {
+                const comment = await Comment.create({
+                    title,
+                    content,
+                    author,
+                    blob,
+                });
+                await Book.findByIdAndUpdate(author, {
+                    $push: { comments: comment._id },
+                });
+                return comment;
+            } catch (err) {
+                throw new Error("Failed to add comment");
+            }
+        },
+        // Update a comment by ID
+        updateComment: async (parent, { _id, title, content, blob }) => {
+            try {
+                return await Comment.findByIdAndUpdate(
+                    _id,
+                    { title, content, blob },
+                    { new: true }
+                );
+            } catch (err) {
+                throw new Error("Failed to update comment");
+            }
+        },
+        // Delete a comment by ID
+        deleteComment: async (parent, { _id }) => {
+            try {
+                return await Comment.findByIdAndDelete(_id);
+            } catch (err) {
+                throw new Error("Failed to delete comment");
+            }
+        },
+        // Add a new club
+        addClub: async (parent, args, context) => {
+            if (!context.user) {
+                throw new AuthenticationError("Not authorized");
+            }
+            try {
+                return await Club.create(args);
+            } catch (err) {
+                throw new Error("Failed to create club");
+            }
+        },
+        // Update a club's data
+        updateClub: async (
+            parent,
+            { _id, clubName, description, img },
+            context
+        ) => {
+            if (!context.user) {
+                throw new AuthenticationError("Not authorized");
+            }
+            try {
+                return await Club.findByIdAndUpdate(
+                    _id,
+                    { clubName, description, img },
+                    { new: true }
+                );
+            } catch (err) {
+                throw new Error("Failed to update club");
+            }
+        },
+        // Delete a club by ID
+        deleteClub: async (parent, { _id }, context) => {
+            if (!context.user) {
+                throw new AuthenticationError("Not authorized");
+            }
+            try {
+                return await Club.findByIdAndDelete(_id);
+            } catch (err) {
+                throw new Error("Failed to delete club");
+            }
+        },
+        // Add a new post to a club
+        addPost: async (
+            parent,
+            { title, content, parentClub, author, media, blob },
+            context
+        ) => {
+            if (!context.user) {
+                throw new AuthenticationError("Not authorized");
+            }
+            try {
+                return await Post.create({
+                    title,
+                    content,
+                    parentClub,
+                    author,
+                    media,
+                    blob,
+                });
+            } catch (err) {
+                throw new Error("Failed to add post");
+            }
+        },
+        // Update a post by ID
+        updatePost: async (
+            parent,
+            { _id, title, content, media, blob },
+            context
+        ) => {
+            if (!context.user) {
+                throw new AuthenticationError("Not authorized");
+            }
+            try {
+                return await Post.findByIdAndUpdate(
+                    _id,
+                    { title, content, media, blob },
+                    { new: true }
+                );
+            } catch (err) {
+                throw new Error("Failed to update post");
+            }
+        },
+        // Delete a post by ID
+        deletePost: async (parent, { _id }, context) => {
+            if (!context.user) {
+                throw new AuthenticationError("Not authorized");
+            }
+            try {
+                return await Post.findByIdAndDelete(_id);
+            } catch (err) {
+                throw new Error("Failed to delete post");
+            }
+        },
     },
-    // Delete a review by ID
-    deleteReview: async (parent, { _id }) => {
-        try {
-            return await Review.findByIdAndDelete(_id);
-        } catch (err) {
-            throw new Error("Failed to delete review");
-        }
-    },
-    // Add a new comment to a post or book
-    addComment: async (parent, { title, content, author, blob }) => {
-        try {
-            const comment = await Comment.create({
-                title,
-                content,
-                author,
-                blob,
-            });
-            await Book.findByIdAndUpdate(author, {
-                $push: { comments: comment._id },
-            });
-            return comment;
-        } catch (err) {
-            throw new Error("Failed to add comment");
-        }
-    },
-    // Update a comment by ID
-    updateComment: async (parent, { _id, title, content, blob }) => {
-        try {
-            return await Comment.findByIdAndUpdate(
-                _id,
-                { title, content, blob },
-                { new: true }
-            );
-        } catch (err) {
-            throw new Error("Failed to update comment");
-        }
-    },
-    // Delete a comment by ID
-    deleteComment: async (parent, { _id }) => {
-        try {
-            return await Comment.findByIdAndDelete(_id);
-        } catch (err) {
-            throw new Error("Failed to delete comment");
-        }
-    },
-    // Add a new club
-    addClub: async (parent, args, context) => {
-        if (!context.user) {
-            throw new AuthenticationError("Not authorized");
-        }
-        try {
-            return await Club.create(args);
-        } catch (err) {
-            throw new Error("Failed to create club");
-        }
-    },
-    // Update a club's data
-    updateClub: async (parent, { _id, clubName, description, img }, context) => {
-        if (!context.user) {
-            throw new AuthenticationError("Not authorized");
-        }
-        try {
-            return await Club.findByIdAndUpdate(
-                _id,
-                { clubName, description, img },
-                { new: true }
-            );
-        } catch (err) {
-            throw new Error("Failed to update club");
-        }
-    },
-    // Delete a club by ID
-    deleteClub: async (parent, { _id }, context) => {
-        if (!context.user) {
-            throw new AuthenticationError("Not authorized");
-        }
-        try {
-            return await Club.findByIdAndDelete(_id);
-        } catch (err) {
-            throw new Error("Failed to delete club");
-        }
-    },
-    // Add a new post to a club
-    addPost: async (parent, { title, content, parentClub, author, media, blob }, context) => {
-        if (!context.user) {
-            throw new AuthenticationError("Not authorized");
-        }
-        try {
-            return await Post.create({
-                title,
-                content,
-                parentClub,
-                author,
-                media,
-                blob,
-            });
-        } catch (err) {
-            throw new Error("Failed to add post");
-        }
-    },
-    // Update a post by ID
-    updatePost: async (parent, { _id, title, content, media, blob }, context) => {
-        if (!context.user) {
-            throw new AuthenticationError("Not authorized");
-        }
-        try {
-            return await Post.findByIdAndUpdate(
-                _id,
-                { title, content, media, blob },
-                { new: true }
-            );
-        } catch (err) {
-            throw new Error("Failed to update post");
-        }
-    },
-    // Delete a post by ID
-    deletePost: async (parent, { _id }, context) => {
-        if (!context.user) {
-            throw new AuthenticationError("Not authorized");
-        }
-        try {
-            return await Post.findByIdAndDelete(_id);
-        } catch (err) {
-            throw new Error("Failed to delete post");
-        }
-    },
-},
 };
 
 module.exports = resolvers;
-                    
