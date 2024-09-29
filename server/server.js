@@ -1,93 +1,103 @@
-require('dotenv').config(); // Load environment variables at the top
+require('dotenv').config();
 
-const express = require("express"); // Import the Express framework
-const { ApolloServer } = require("@apollo/server"); // Import Apollo Server from the latest package
-const { expressMiddleware } = require("@apollo/server/express4"); // Import the Express middleware integration for Apollo Server
-const path = require("path"); // Import the path module for handling file paths
-const { typeDefs, resolvers } = require("./schemas"); // Import GraphQL schema definitions and resolvers
-const db = require("./config/connection"); // Import MongoDB connection configuration
-const { authMiddleware } = require("./utils/auth"); // Import authentication middleware
+const express = require("express");
+const { ApolloServer } = require("@apollo/server");
+const { expressMiddleware } = require("@apollo/server/express4");
+const path = require("path");
+const { typeDefs, resolvers } = require("./schemas");
+const { connection } = require("./config/connection");
+const { authMiddleware } = require("./utils/auth");
+const cors = require('cors');
 const Librarian = require('./utils/librarian');
-const profileRoutes = require('./routes/profile');
 
-const PORT = process.env.PORT || 3001; // Define the server port, defaulting to 3001
-const app = express(); // Create an instance of the Express app
+const PORT = process.env.PORT || 3001;
+const app = express();
 
-app.use('/api', profileRoutes); // Use profile routes under the /api path
+// MongoDB connection error handling and retry mechanism
+const connectWithRetry = () => {
+    console.log('Attempting to connect to MongoDB...');
+    return connection.once('open', startServer);
+};
 
-// Initialize an Apollo Server with type definitions and resolvers
-const server = new ApolloServer({
-    typeDefs,
-    resolvers,
+connection.on("error", (error) => {
+    console.error("MongoDB Connection error:", error);
+    console.log('Retrying connection in 5 seconds...');
+    setTimeout(connectWithRetry, 5000);
 });
 
-const librarian = new Librarian('https://www.googleapis.com/books/v1/volumes?q=isbn:');
+// Librarian for book data
+const librarian = new Librarian(process.env.GOOGLE_BOOKS_API_URL);
 
-// Async function to start the Apollo Server and apply middleware
-const startApolloServer = async () => {
-    try {
-        await server.start(); // Start the Apollo Server
+// Configure Express Middleware and Routes
+const configureExpress = (app) => {
+    // CORS setup
+    app.use(cors({
+        origin: ['http://localhost:3000', 'https://studio.apollographql.com'],
+        methods: 'GET,POST',
+        allowedHeaders: 'Content-Type,Authorization',
+        credentials: true,
+    }));
 
-        // Apply Express middleware for parsing incoming requests with URL-encoded and JSON payloads
-        app.use(express.urlencoded({ extended: false }));
-        app.use(express.json());
+    // Middleware for parsing JSON and urlencoded data
+    app.use(express.json());
+    app.use(express.urlencoded({ extended: true }));
 
-        // Apply Apollo GraphQL middleware with the context provided by authMiddleware for authentication
-        app.use(
-            "/graphql",
-            expressMiddleware(server, {
-                context: authMiddleware,
-            })
-        );
-
-        // Serve static files if in production
-        if (process.env.NODE_ENV === "production") {
-            app.use(express.static(path.join(__dirname, "../client/build"))); // Serve static files from the 'client/build' directory
-
-            // Fallback route to serve the client application for any undefined routes
-            app.get("*", (req, res) => {
-                res.sendFile(
-                    path.join(__dirname, "../client/build/index.html")
-                );
-            });
-
-            app.get('/api/bookdata/:endpoint', async (req, res) => {
-                const endpoint = req.params.endpoint;
-
-                try {
-                    const data = await librarian.getBook(`/${endpoint}`);
-                    res.status(200).json(data);
-                } catch (err) {
-                    res.status(500).json({ message: 'Failed to fetch book' });
-                }
-            });
-
-            // Protected route to get user profile
-            router.get('/profile', authMiddleware, (req, res) => {
-                if (!req.user) {
-                    return res.status(401).json({ msg: 'Unauthorized' });
-                }
-
-                // If authenticated, return user data
-                res.json({ user: req.user });
-            });
+    // REST API Route for fetching book data
+    app.get('/api/bookdata/:endpoint', async (req, res) => {
+        try {
+            const data = await librarian.retrieve(req.params.endpoint);
+            if (!data) return res.status(404).json({ message: 'Book not found' });
+            res.status(200).json(data);
+        } catch (err) {
+            console.error('Error fetching book data:', err);
+            res.status(500).json({ message: 'Failed to fetch book data', error: err.message });
         }
+    });
 
-        // Start the server and connect to the MongoDB database
-        db.once("open", () => {
-            app.listen(PORT, () => {
-                console.log(
-                    `🌍 API server running on http://localhost:${PORT}!`
-                );
-                console.log(
-                    `🚀 Use GraphQL at http://localhost:${PORT}/graphql`
-                );
-            });
+    // Serve static files if in production
+    if (process.env.NODE_ENV === "production") {
+        app.use(express.static(path.join(__dirname, "../client/build")));
+        app.get("*", (req, res) => {
+            res.sendFile(path.join(__dirname, "../client/build/index.html"));
         });
-    } catch (err) {
-        console.error("Error starting servers: ", err);
     }
 };
 
-// Call the async function to start the server
-startApolloServer();
+// Start Apollo Server and Express App
+// Start Apollo Server and Express App
+const startServer = async () => {
+    configureExpress(app);
+
+    try {
+        const server = new ApolloServer({
+            typeDefs,
+            resolvers,
+            introspection: true,  // Enable introspection
+            playground: true,
+        });
+
+        await server.start();
+
+        // Apply Apollo middleware with authentication
+        app.use(
+            "/graphql",
+            expressMiddleware(server, {
+                context: async ({ req }) => authMiddleware({ req }),
+            })
+        );
+
+        console.log("🚀 Apollo Server running at /graphql");
+    } catch (error) {
+        console.error("Error starting Apollo Server:", error);
+    }
+
+    // Start Express server
+    app.listen(PORT, () => {
+        console.log(`🌍 API server running on http://localhost:${PORT}!`);
+        console.log(`🚀 Use GraphQL at http://localhost:${PORT}/graphql`);
+    });
+};
+
+
+// Connect to MongoDB and start the server
+connectWithRetry();
