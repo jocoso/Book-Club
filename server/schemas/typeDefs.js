@@ -15,9 +15,10 @@ const typeDefs = gql`
 
   # Book Type
   type Book {
-    isbn: Int!
-    blob: Int
-  }
+  _id: ID!
+  isbn: Int!
+  blob: Int
+}
   
   # Comment Type
   type Comment {
@@ -42,8 +43,13 @@ const typeDefs = gql`
     _id: ID!
     reviewText: String!
     rating: Int!
+<<<<<<< HEAD
+    user: User
+    book: Book
+=======
     username: User!
     bookId: ID!
+>>>>>>> 66d79dd5c22a5fa1f32fc5f8391663c53db17a0b
     createdAt: String
     title: String 
     content: String 
@@ -121,7 +127,8 @@ const typeDefs = gql`
     discussion(_id: ID!): Discussion
 
     # Review Queries
-    getAllReviews: [Review]
+    getAllReviews: [Review] 
+    review(_id: ID!): Review
 
     # User's wishcart (for books)
     getUserWishcart(user_Id: ID!): [Book]
@@ -145,9 +152,10 @@ const typeDefs = gql`
     deleteBook(_id: ID!): Book
 
     # Review Mutations
-    addReview(bookId: ID!, reviewText: String!, rating: Int!): Review
-    updateReview(_id: ID!, reviewText: String, rating: Int): Review
+    addReview(bookId: ID!, reviewText: String!, rating: Int!, user: ID!, title: String, content: String, inks: Int): Review
+    updateReview(_id: ID!, reviewText: String, rating: Int, title: String, content: String, inks: Int): Review
     deleteReview(_id: ID!): Review
+
 
     # Comment Mutations (related to Book and Post)
     addComment(title: String!, content: String, author: ID!, blob: Int): Comment

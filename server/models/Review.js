@@ -14,14 +14,15 @@ const reviewSchema = new Schema(
         type: Number,
         required: true,
     },
-    username: {
-        type: String,
-        required: true,
+    user: {
+      type: Schema.Types.ObjectId,
+      ref: 'User', // Reference to the User collection
+      required: false,
     },
-    bookId: {
+    book: {
         type: Schema.Types.ObjectId,
         ref: 'Book',
-        required: true,
+        required: false,
     },
     createdAt: {
         type: Date,
