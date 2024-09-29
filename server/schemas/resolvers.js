@@ -29,12 +29,12 @@ const resolvers = {
             return Book.find();
         },
         // Get a single book by ID
-        book: async (parent, { _id }) => {
-            return Book.findById(_id);
+        book: async (parent, { isbn }) => {
+            return Book.findById(isbn);
         },
         // Get a single book's data by ISBN 
-        getBookData: async (parent, { _id }) => {
-            return Book.findOne({ _id });
+        getBookData: async (parent, { isbn }) => {
+            return Book.findOne({ isbn });
         },
         // Get all clubs
         clubs: async () => {
@@ -181,8 +181,8 @@ const resolvers = {
             return newBook;
         },
         // Update a book's data
-        updateBook: async (parent, {_id, blob  }) => {
-            return Book.findByIdAndUpdate(_id, { blob  }, { new: true });
+        updateBook: async (parent, { isbn, blob  }) => {
+            return Book.findByIdAndUpdate( isbn, { blob  }, { new: true });
         },
         // Delete a book by ID
         deleteBook: async (parent, { _id }) => {

@@ -2,7 +2,7 @@ const { Schema, model } = require('mongoose');
 
 const bookSchema = new Schema(
 {
-   _id:{
+   isbn:{
     type: String, 
     require: true, 
     unique: true

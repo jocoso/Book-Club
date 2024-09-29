@@ -1,23 +1,20 @@
 const mongoose = require('mongoose');
-const db = require('../config/connection'); 
 
 module.exports = async (modelName, collectionName) => {
-    try {
-        if(db.readyState !== 1) {
-            throw new Error('Database is not connected.');
-        }
-
-        const collections = await db.db.listCollections().toArray();
-        const collectionExists = await db.db.listCollections({ name: collectionName }).toArray();
-
-        if(collectionExists.length) {
-            await db.db.dropCollection(collectionName);
-            console.log(`Collection ${collectionName} dropped`);
-        } else {
-            console.log(`Collection ${collectionName} does not exists.`)
-        }
-    } catch (err) {
-        console.log(`Error in dropping collection: ${err.message}`);
-        throw err;
+  try {
+    if (mongoose.connection.readyState !== 1) { // Check if the connection is established
+      throw new Error('Database is not connected.');
     }
-}
+
+    console.log(`Dropping collection ${collectionName}...`);
+    const collections = await mongoose.connection.db.collections();
+    if (collections.map(col => col.collectionName).includes(collectionName)) {
+      await mongoose.connection.db.dropCollection(collectionName);
+      console.log(`Collection ${collectionName} dropped successfully.`);
+    } else {
+      console.log(`Collection ${collectionName} does not exist.`);
+    }
+  } catch (err) {
+    console.error(`Error in dropping collection: ${err.message}`);
+  }
+};
