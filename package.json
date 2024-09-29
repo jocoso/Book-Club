@@ -14,7 +14,13 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+<<<<<<< HEAD
+    "apollo-server": "^3.13.0",
+    "concurrently": "^9.0.1",
+    "graphql": "^16.9.0"
+=======
     "concurrently": "^9.0.1",
     "jsonwebtoken": "^9.0.2"
+>>>>>>> 353a907d6f551a6c61b0ea39d9462e60656645b7
   }
 }

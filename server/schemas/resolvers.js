@@ -48,6 +48,37 @@ const resolvers = {
         getAllClubs: async () => {
             return Club.find().populate('members').populate('posts');
         },
+        // Get all comments
+        comments: async () => {
+            try {
+              const comments = await Comment.find().populate({
+                path: 'author',
+                model: 'User'
+              });
+              console.log('Comments:', comments); // Check if author is populated correctly
+              return comments;
+            } catch (err) {
+              throw new Error('Failed to fetch comments');
+            }
+          },
+  
+        // Get a single comment by ID
+        comment: async (parent, { _id }) => {
+          try {
+            return await Comment.findById(_id).populate('author');
+          } catch (err) {
+            throw new Error('Failed to fetch comment');
+          }
+      },
+  
+        // Get all comments for a specific book
+        commentsByBook: async (parent, { bookId }) => {
+          try {
+            return await Comment.find({ bookId }).populate('author');
+          } catch (err) {
+            throw new Error('Failed to fetch comments for the book');
+          }
+        },
         
         // Get all reviews
         getAllReviews: async () => {
@@ -241,8 +272,8 @@ const resolvers = {
             return Club.findByIdAndDelete(_id);
         },
         // Add a new post to a club
-        addPost: async (parent, { title, content, author, media, blob }) => {
-            return Post.create({ title, content, author, media, blob });
+        addPost: async (parent, { title, content, parentClub, author, media, blob }) => {
+            return Post.create({ title, content, parentClub, author, media, blob });
         },
         // Update a post by ID
         updatePost: async (parent, { _id, title, content, media, blob }) => {

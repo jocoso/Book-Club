@@ -1,4 +1,4 @@
-const { Book } = require('../models'); 
+const { Book } = require('../../models'); 
 
 const bookData = [
   { title: 'Dune', author: 'Frank Herbert', club_id: 1 },
