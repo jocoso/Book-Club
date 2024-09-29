@@ -1,43 +1,36 @@
-import React from 'react';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import Homepage from './components/Homepage';
-import BookClubList from './components/BookClubList';
-import Discussions from './components/Discussions';
-import Reviews from './components/Reviews';
-import UserProfile from './components/UserProfile';
-import logo from './logo.svg';
-import './App.css';
+import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
+import { Outlet } from 'react-router-dom';
+
+import { AuthProvider } from './contexts/AuthContexts';
+import { BookProvider } from './contexts/BookListContext';
+import { DiscussionProvider } from './contexts/DiscussionContext';
+
+import Header from './components/Header';
+import Footer from './components/Footer';
+
+const client = new ApolloClient({
+    uri: '/graphql',
+    cache: new InMemoryCache(),
+});
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-
-      {/* Add the routing below the header */}
-      <Router>
-        <Switch>
-          <Route exact path="/" component={Homepage} />
-          <Route path="/book-clubs" component={BookClubList} />
-          <Route path="/discussions" component={Discussions} />
-          <Route path="/reviews" component={Reviews} />
-          <Route path="/user-profile" component={UserProfile} />
-        </Switch>
-      </Router>
-    </div>
-  );
+    return(
+        <ApolloProvider client={client}>
+            <AuthProvider>
+                <BookProvider>
+                    <DiscussionProvider>
+                        <div className="flex-column justify-flex-start min-100-vh">
+                            <Header />
+                            <div className="container">
+                                <Outlet />
+                            </div>
+                            <Footer />
+                        </div>
+                    </DiscussionProvider>
+                </BookProvider>
+            </AuthProvider>
+        </ApolloProvider>
+    );
 }
 
 export default App;

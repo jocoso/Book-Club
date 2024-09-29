@@ -1,6 +1,6 @@
 const { AuthenticationError } = require('@apollo/server'); // Replace with proper error handling package if needed
 const { signToken } = require('../utils/auth');
-const { User, Book, Club, Discussion, Comment, Post, Review } = require('../models');
+const { User, Book, Club, Comment, Post, Review } = require('../models');
 
 
 const resolvers = {
@@ -26,15 +26,15 @@ const resolvers = {
         },
         // Get all books
         books: async () => {
-            return Book.find().populate('reviews').populate('comments');
+            return Book.find();
         },
         // Get a single book by ID
         book: async (parent, { _id }) => {
-            return Book.findById(_id).populate('reviews').populate('comments');
+            return Book.findById(_id);
         },
         // Get a single book's data by ISBN 
-        getBookData: async (parent, { _id }) => {
-            return Book.findOne({ isbn }).populate('reviews').populate('comments');
+        getBookData: async (parent, { isbn }) => {
+            return Book.findOne({ isbn });
         },
         // Get all clubs
         clubs: async () => {
@@ -58,11 +58,18 @@ const resolvers = {
         },
         // Get all reviews
         getAllReviews: async () => {
-            return Review.find();
+            return Review.find().populate({
+              path: 'book',
+              select: '_id isbn blob', // Ensure the fields to be selected
+            }).populate('user');
+          },
+        // Get a single review by ID
+        review: async (parent, { _id }) => {
+            return Review.findById(_id).populate('user').populate('book');
         },
         // Get user's wishcart
         getUserWishcart: async (parent, { user_Id }) => {
-            return Book.find({ _id: { $in: user_Id } }).populate('comments').populate('reviews');
+            return Book.find({ _id: { $in: user_Id } });
         },
     },
     Mutation: {
@@ -141,27 +148,75 @@ const resolvers = {
             return user.populate('friends').execPopulate();
         },
         // Add a new book
-        addBook: async (parent, args) => {
-            return Book.create(args);
+        addBook: async (parent, { isbn, blob}) => {
+            const bookExists = await Book.findOne({ isbn });
+            if (bookExists) {
+              throw new Error('Book with this ISBN already exists.');
+            }
+            const newBook = await Book.create({ isbn, blob });
+            return newBook;
         },
         // Update a book's data
-        updateBook: async (parent, { _id, title, author, description, image }) => {
-            return Book.findByIdAndUpdate(_id, { title, author, description, image }, { new: true });
+        updateBook: async (parent, { isbn, blob  }) => {
+            return Book.findByIdAndUpdate(isbn, { blob  }, { new: true });
         },
         // Delete a book by ID
-        deleteBook: async (parent, { _id }) => {
-            return Book.findByIdAndDelete(_id);
+        deleteBook: async (parent, { isbn }) => {
+            return Book.findByIdAndDelete(isbn);
         },
         // Add a new review to a book
-        addReview: async (parent, { bookId, reviewText, rating }) => {
-            const review = await Review.create({ bookId, reviewText, rating });
-            await Book.findByIdAndUpdate(bookId, { $push: { reviews: review._id } });
-            return review;
-        },
+        addReview: async (parent, { bookId, reviewText, rating, user, title, content, inks }) => {
+            try {
+              // Find the book to ensure it exists
+              const book = await Book.findById(bookId);
+              if (!book) {
+                throw new Error('Book not found');
+              }
+      
+              // Find the user to ensure it exists
+              const userExists = await User.findById(user);
+              if (!userExists) {
+                throw new Error('User not found');
+              }
+      
+              // Create a new review
+              const newReview = await Review.create({
+                bookId,
+                reviewText,
+                rating,
+                user,
+                title,
+                content,
+                inks,
+              });
+      
+              // Optionally, you can push this review into the book's reviews array
+              await Book.findByIdAndUpdate(bookId, { $push: { reviews: newReview._id } });
+      
+              return newReview;
+            } catch (err) {
+              console.error(err);
+              throw new Error('Failed to add review');
+            }
+          },
         // Update a review by ID
-        updateReview: async (parent, { _id, reviewText, rating }) => {
-            return Review.findByIdAndUpdate(_id, { reviewText, rating }, { new: true });
-        },
+        updateReview: async (parent, { _id, reviewText, rating, title, content, inks }) => {
+            try {
+              // Build an update object with only provided fields
+              const updateFields = {};
+              if (reviewText !== undefined) updateFields.reviewText = reviewText;
+              if (rating !== undefined) updateFields.rating = rating;
+              if (title !== undefined) updateFields.title = title;
+              if (content !== undefined) updateFields.content = content;
+              if (inks !== undefined) updateFields.inks = inks;
+      
+              const updatedReview = await Review.findByIdAndUpdate(_id, updateFields, { new: true }).populate('user').populate('book');
+              return updatedReview;
+            } catch (err) {
+              console.error(err);
+              throw new Error('Failed to update review');
+            }
+          },
         // Delete a review by ID
         deleteReview: async (parent, { _id }) => {
             return Review.findByIdAndDelete(_id);

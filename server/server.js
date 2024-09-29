@@ -5,15 +5,24 @@ const path = require("path"); // Import the path module for handling file paths
 const { typeDefs, resolvers } = require("./schemas"); // Import GraphQL schema definitions and resolvers
 const db = require("./config/connection"); // Import MongoDB connection configuration
 const { authMiddleware } = require("./utils/auth"); // Import authentication middleware
+const Librarian = require('./utils/librarian');
+const profileRoutes = require('./routes/profile');
+
+
 
 const PORT = process.env.PORT || 3001; // Define the server port, defaulting to 3001
 const app = express(); // Create an instance of the Express app
+
+app.use('/api', profileRoutes); // Use profile routes under the /api path
+
 
 // Initialize an Apollo Server with type definitions and resolvers
 const server = new ApolloServer({
     typeDefs,
     resolvers,
 });
+
+const librarian = new Librarian('https://www.googleapis.com/books/v1/volumes?q=isbn:');
 
 // Async function to start the Apollo Server and apply middleware
 const startApolloServer = async () => {
@@ -42,6 +51,17 @@ const startApolloServer = async () => {
                     path.join(__dirname, "../client/build/index.html")
                 );
             });
+
+            app.get('/api/bookdata/:endpoint', async (req, res) => {
+                const endpoint = req.params.endpoint;
+
+                try {
+                    const data = await librarian.getBook(`/${endpoint}`);
+                    res.status(200).json(data);
+                }catch(err) {
+                    res.status(500).json({ message: 'Failed to fetch book'});
+                }
+            })
         }
 
         // Start the server and connect to the MongoDB database
