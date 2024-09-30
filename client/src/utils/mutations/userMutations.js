@@ -97,3 +97,16 @@ export const UPDATE_EMAIL = gql`
     }
 `;
 
+//Mutation to add a friend
+export const ADD_FRIEND = gql`
+    mutation AddFriend($userid: ID!, $friendId: ID!) {
+        addFriend(user_id: $userId, friend_Id: $friendId) {
+            _id
+            username
+            friends {
+                _id
+                username
+            }
+        }
+    }
+`;

@@ -67,7 +67,10 @@ const resolvers = {
         // Get all clubs
         clubs: async () => {
             try {
-                return await Club.find().populate("members").populate("posts");
+                return await Club.find()
+                    .populate("founder")
+                    .populate("members")
+                    .populate("posts");
             } catch (err) {
                 throw new Error("Failed to fetch clubs");
             }

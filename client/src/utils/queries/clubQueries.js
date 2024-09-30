@@ -2,15 +2,39 @@ import { gql } from "@apollo/client";
 
 //Mutation to get all clubs in database
 export const GET_ALL_CLUBS = gql`
-    query GetAllClubs {
-        getAllClubs {
+    query Clubs {
+        clubs {
             _id
-            name
             description
+            founder {
+                _id
+                username
+            }
+            name
             img
-            founder
-            members
-            posts
+            posts {
+                _id
+                title
+                content
+                author {
+                    _id
+                    username
+                }
+                blob
+                media
+                comments {
+                    _id
+                    title
+                    content
+                    author {
+                        _id
+                        username
+                    }
+                    blob
+                    createdAt
+                    updatedAt
+                }
+            }
             memberCount
         }
     }
@@ -18,8 +42,8 @@ export const GET_ALL_CLUBS = gql`
 
 // Mutation to get one club in the database
 export const GET_CLUB_BY_ID = gql`
-    query GetClub($_id: ID!) {
-        getClub(_id: $_id) {
+    query getClub($_id: ID!) {
+        club(_id: $_id) {
             _id
             name
             description
