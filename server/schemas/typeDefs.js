@@ -103,7 +103,7 @@ const typeDefs = gql`
         user(_id: ID!): User
         me: User
         getUser(email: String!): User
-        books: [Book]
+        books(limit: Int): [Book]
         book(_id: ID!): Book
         getBookData(isbn: ID!): Book
         club(_id: ID!): Club # <-- Add this line

@@ -49,9 +49,9 @@ const resolvers = {
             }
         },
         // Get all books
-        books: async () => {
+        books: async (parent, {limit}) => {
             try {
-                return await Book.find();
+                return await Book.find().limit(limit);
             } catch (err) {
                 throw new Error("Failed to fetch books");
             }

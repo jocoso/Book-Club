@@ -1,25 +1,25 @@
-// src/components/User/UserComponent.jsx
 import React from "react";
 import { useQuery } from "@apollo/client";
-import { GET_ALL_CLUBS } from "../../utils/queries/clubQueries";
-import ClubCard from "../ClubCard";
+import { GET_X_BOOKS } from "../../utils/queries/bookQueries";
+import BookCard from "../BookCard";
 
-const ClubList = () => {
-    // Fetch all users using the GET_ALL_USERS query
-    const { loading, error, data } = useQuery(GET_ALL_CLUBS);
+const LimitedBookList = () => {
+    const { loading, error, data } = useQuery(GET_X_BOOKS, {
+        variables: { limit: 10 },
+    });
 
     if (loading) return <p>Loading...</p>; // Display while loading data
     if (error) return <p>Error: {error.message}</p>; // Display on error
-
     return (
         <div>
             <ul>
                 {/* Map through the users and display each one */}
-                {data.clubs.map((club) => {
+                {data.books.map((book) => {
+            console.log(book);
                     return (
-                        <li key={club._id}>
+                        <li key={book._id}>
                             <a href="/community">
-                                <ClubCard club={club} />
+                                <BookCard book={book} />
                             </a>
                         </li>
                     );
@@ -29,4 +29,4 @@ const ClubList = () => {
     );
 };
 
-export default ClubList;
+export default LimitedBookList;
