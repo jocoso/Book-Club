@@ -1,0 +1,82 @@
+[
+    {
+        "_id": "64dfb9206a9f5c0012c90c01",
+        "username": "johnDoe",
+        "email": "john.doe@example.com",
+        "password": "securePassword1",
+        "booksRead": [],
+        "friends": []
+    },
+    {
+        "_id": "64dfb9206a9f5c0012c90c02",
+        "username": "janeSmith",
+        "email": "jane.smith@example.com",
+        "password": "securePassword2",
+        "booksRead": [],
+        "friends": []
+    },
+    {
+        "_id": "64dfb9206a9f5c0012c90c03",
+        "username": "michaelBrown",
+        "email": "michael.brown@example.com",
+        "password": "securePassword3",
+        "booksRead": [],
+        "friends": []
+    },
+    {
+        "_id": "64dfb9206a9f5c0012c90c04",
+        "username": "lucyWhite",
+        "email": "lucy.white@example.com",
+        "password": "securePassword4",
+        "booksRead": [],
+        "friends": []
+    },
+    {
+        "_id": "64dfb9206a9f5c0012c90c05",
+        "username": "davidJones",
+        "email": "david.jones@example.com",
+        "password": "securePassword5",
+        "booksRead": [],
+        "friends": []
+    },
+    {
+        "_id": "64dfb9206a9f5c0012c90c06",
+        "username": "emmaTaylor",
+        "email": "emma.taylor@example.com",
+        "password": "securePassword6",
+        "booksRead": [],
+        "friends": []
+    },
+    {
+        "_id": "64dfb9206a9f5c0012c90c07",
+        "username": "noahJohnson",
+        "email": "noah.johnson@example.com",
+        "password": "securePassword7",
+        "booksRead": [],
+        "friends": []
+    },
+    {
+        "_id": "64dfb9206a9f5c0012c90c08",
+        "username": "oliviaBrown",
+        "email": "olivia.brown@example.com",
+        "password": "securePassword8",
+        "booksRead": [],
+        "friends": []
+    },
+    {
+        "_id": "64dfb9206a9f5c0012c90c09",
+        "username": "liamGarcia",
+        "email": "liam.garcia@example.com",
+        "password": "securePassword9",
+        "booksRead": [],
+        "friends": []
+    },
+    {
+        "_id": "64dfb9206a9f5c0012c90c10",
+        "username": "sophiaMartinez",
+        "email": "sophia.martinez@example.com",
+        "password": "securePassword10",
+        "booksRead": [],
+        "friends": []
+    }
+]

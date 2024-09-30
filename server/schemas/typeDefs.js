@@ -1,180 +1,235 @@
-const { gql } = require('graphql-tag'); // Correct import for gql
+const { gql } = require("graphql-tag");
 
-
-// Define the GraphQL schema types, queries, and mutations
 const typeDefs = gql`
-  # User Type
-  type User {
-    _id: ID!
-    username: String!
-    email: String!
-    password: String! # Adding password field
-    booksRead: [Book]
-    friends: [User]
-  }
+    scalar Date
 
-  # Book Type
-  type Book {
-    _id: ID!
-    title: String!
-    author: String!
-    description: String!
-    image: String
-    reviews: [Review]
-    comments: [Comment]
-    blob: Int! 
-  }
-  
-  # Comment Type
-  type Comment {
-    _id: ID!
-    title: String!
-    content: String
-    author: User!
-    blob: Int
-  }
+    # User Type
+    type User {
+        _id: ID!
+        username: String!
+        email: String!
+        booksRead: [Book]
+        friends: [User]
+    }
 
-  # Comment Input Type
-  input CommentInput {
-    _id: ID!
-    title: String!
-    content: String
-    author: ID! # Changed from User! to ID!
-    blob: Int
-}
+    # Book Type
+    type Book {
+        _id: ID!
+        isbn: String!
+        title: String
+        author: String
+        description: String
+        image: String
+        blob: Int
+    }
 
-  # Review Type
-  type Review {
-    _id: ID!
-    reviewText: String!
-    rating: Int!
-    username: String!
-    bookId: ID!
-    createdAt: String
-    title: String 
-    content: String 
-    inks: Int # Added to match group's "Inks (likes)" field
-  }
+    # Comment Type
+    type Comment {
+        _id: ID!
+        title: String!
+        content: String
+        author: User!
+        blob: Int
+        createdAt: Date
+        updatedAt: Date
+    }
 
-  # Club Type
-  type Club {
-    _id: ID!
-    clubName: String!
-    description: String!
-    img: String # Added field for image (with default handled in resolvers)
-    members: [User]
-    discussions: [Discussion]
-    posts: [Post]
-    memberCount: Int
-  }
+    # Comment Input Type
+    input CommentInput {
+        title: String!
+        content: String
+        author: ID!
+        blob: Int
+    }
 
-  type Post {
-    _id: ID!
-    title: String!
-    content: String!
-    author: User!
-    blob: Int
-    media: [String!]!
-    comments: [Comment!]!
-  }
-  
-  # Post Input Type
-  input PostInput {
-    _id: ID!
-    title: String!
-    content: String!
-    author: ID! # Changed from User! to ID!
-    blob: Int
-    media: [String!]!
-    comments: [CommentInput]
-}
+    # Review Type
+    type Review {
+        _id: ID!
+        reviewText: String!
+        rating: Int!
+        user: User!
+        bookId: ID!
+        createdAt: Date
+        title: String
+        content: String
+        inks: Int
+    }
 
-  # Discussion Type
-  type Discussion {
-    _id: ID!
-    topic: String!
-    content: String!
-    username: String!
-    createdAt: String
-  }
+    # Club Type
+    type Club {
+        _id: ID!
+        name: String!
+        description: String!
+        img: String
+        founder: User!
+        members: [User!]
+        posts: [Post!]
+        memberCount: Int
+    }
 
-  # Auth Type
-  type Auth {
-    token: ID!
-    user: User
-  }
+    # Post Type
+    type Post {
+        _id: ID!
+        title: String!
+        content: String!
+        club: Club!
+        author: User!
+        blob: Int
+        media: [String!]
+        comments: [Comment!]!
+        createdAt: Date
+        updatedAt: Date
+    }
 
-  # Query Type Definitions
-  type Query {
-    # User Queries
-    users: [User]
-    user(_id: ID!): User
-    me: User
-    getUser(email: String!): User
+    # Post Input Type
+    input PostInput {
+        title: String!
+        content: String!
+        author: ID!
+        blob: Int
+        media: [String!]!
+        comments: [CommentInput]
+    }
 
-    # Book Queries
-    books: [Book]
-    book(_id: ID!): Book
-    getBookData(_id: ID!): Book
+    # Auth Type
+    type Auth {
+        token: ID!
+        user: User
+    }
 
-    # Club Queries
-    clubs: [Club]
-    club(_id: ID!): Club
-    getAllClubs: [Club]
+    # Query Type Definitions
+    type Query {
+        users: [User]
+        user(_id: ID!): User
+        me: User
+        getUser(email: String!): User
+        books: [Book]
+        book(_id: ID!): Book
+        getBookData(isbn: ID!): Book
+        clubs: [Club]
+        club(_id: ID!): Club
+        getAllClubs: [Club]
+        comments: [Comment]
+        comment(_id: ID!): Comment
+        commentsByBook(bookId: ID!): [Comment]
 
-    # Discussion Queries
-    discussions: [Discussion]
-    discussion(_id: ID!): Discussion
+        # Review Queries
+        getAllReviews: [Review]
+        review(_id: ID!): Review
 
-    # Review Queries
-    getAllReviews: [Review]
+        # User's wishcart (for books)
+        getUserWishcart(user_Id: ID!): [Book]
+    }
 
-    # User's wishcart (for books)
-    getUserWishcart(user_Id: ID!): [Book]
-  }
+    # Mutation Type Definitions
+    type Mutation {
+        addUser(username: String!, email: String!, password: String!): Auth
+        login(email: String!, password: String!): Auth
+        updateUser(
+            _id: ID!
+            username: String
+            email: String
+            password: String
+        ): User
+        deleteUser(_id: ID!): Boolean
+        updatePassword(
+            _id: ID!
+            lastPassword: String!
+            newPassword: String!
+        ): User
+        updateUsername(_id: ID!, newUserName: String!): User
+        updateEmail(_id: ID!, newEmail: String!): User
+        addFriend(user_Id: ID!, friend_Id: ID!): User
 
-  # Mutation Type Definitions
-  type Mutation {
-    # User Mutations
-    addUser(username: String!, email: String!, password: String!): Auth
-    login(email: String!, password: String!): Auth
-    updateUser(_id: ID!, username: String, email: String, password: String): User
-    deleteUser(_id: ID!): User
-    updatePassword(_id: ID!, lastPassword: String!, newPassword: String!): User
-    updateUsername(_id: ID!, newUserName: String!): User
-    updateEmail(_id: ID!, newEmail: String!): User
-    addFriend(user_Id: ID!, friend_Id: ID!): [User]
+        # Book Mutations
+        addBook(
+            _id: ID!
+            isbn: String!
+            title: String
+            author: String
+            description: String
+            image: String
+            blob: Int
+        ): Book
+        updateBook(
+            _id: ID!
+            isbn: String!
+            title: String
+            author: String
+            description: String
+            image: String
+            blob: Int
+        ): Book
+        deleteBook(_id: ID!): Boolean
 
-    # Book Mutations
-    addBook(title: String!, author: String!, description: String!, image: String): Book
-    updateBook(_id: ID!, title: String, author: String, description: String, image: String): Book
-    deleteBook(_id: ID!): Book
+        # Review Mutations
+        addReview(
+            bookId: ID!
+            reviewText: String!
+            rating: Int!
+            user: ID!
+            title: String
+            content: String
+            inks: Int
+        ): Review
+        updateReview(
+            _id: ID!
+            reviewText: String
+            rating: Int
+            title: String
+            content: String
+            inks: Int
+        ): Review
+        deleteReview(_id: ID!): Boolean
 
-    # Review Mutations
-    addReview(bookId: ID!, reviewText: String!, rating: Int!): Review
-    updateReview(_id: ID!, reviewText: String, rating: Int): Review
-    deleteReview(_id: ID!): Review
+        # Comment Mutations
+        addComment(
+            title: String!
+            content: String
+            author: ID!
+            blob: Int
+        ): Comment
+        updateComment(
+            _id: ID!
+            title: String
+            content: String
+            blob: Int
+        ): Comment
+        deleteComment(_id: ID!): Boolean
 
-    # Comment Mutations (related to Book and Post)
-    addComment(title: String!, content: String, author: ID!, blob: Int): Comment
-    updateComment(_id: ID!, title: String, content: String, blob: Int): Comment
-    deleteComment(_id: ID!): Comment
+        # Club Mutations
+        addClub(
+            name: String!
+            description: String!
+            img: String
+            founder: ID!
+        ): Club
+        updateClub(
+            _id: ID!
+            name: String
+            description: String
+            img: String
+        ): Club
+        deleteClub(_id: ID!): Boolean
 
-    # Club Mutations
-    addClub(clubName: String!, description: String!, img: String): Club
-    updateClub(_id: ID!, clubName: String, description: String, img: String): Club
-    deleteClub(_id: ID!): Club
-
-    # Post Mutations (related to Club)
-    addPost(title: String!, content: String!, author: ID!, media: [String!]!, blob: Int): Post
-    updatePost(_id: ID!, title: String, content: String, media: [String], blob: Int): Post
-    deletePost(_id: ID!): Post
-
-    # Discussion Mutations
-    addDiscussion(clubId: ID!, topic: String!, content: String!): Discussion
-    updateDiscussion(_id: ID!, topic: String, content: String): Discussion
-    deleteDiscussion(_id: ID!): Discussion
-  }
+        # Post Mutations
+        addPost(
+            title: String!
+            content: String!
+            club: ID!
+            author: ID!
+            media: [String!]
+            blob: Int
+        ): Post
+        updatePost(
+            _id: ID!
+            title: String
+            content: String
+            media: [String!]
+            blob: Int
+        ): Post
+        deletePost(_id: ID!): Boolean
+    }
 `;
 
 module.exports = typeDefs;
