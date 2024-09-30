@@ -106,8 +106,7 @@ const typeDefs = gql`
         books: [Book]
         book(_id: ID!): Book
         getBookData(isbn: ID!): Book
-        clubs: [Club]
-        club(_id: ID!): Club
+        getClub(_id: ID!): Club
         getAllClubs: [Club]
         comments: [Comment]
         comment(_id: ID!): Comment
