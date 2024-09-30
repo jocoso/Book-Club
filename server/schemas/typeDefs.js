@@ -22,7 +22,7 @@ const typeDefs = gql`
   # Comment Type
   type Comment {
     _id: ID!
-    title: String!
+    title: User!
     content: String
     author: User!
     blob: Int
