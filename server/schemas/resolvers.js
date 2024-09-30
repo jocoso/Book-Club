@@ -49,9 +49,9 @@ const resolvers = {
             }
         },
         // Get all books
-        books: async () => {
+        books: async (parent, {limit}) => {
             try {
-                return await Book.find();
+                return await Book.find().limit(limit);
             } catch (err) {
                 throw new Error("Failed to fetch books");
             }
@@ -67,7 +67,10 @@ const resolvers = {
         // Get all clubs
         clubs: async () => {
             try {
-                return await Club.find().populate("members").populate("posts");
+                return await Club.find()
+                    .populate("founder")
+                    .populate("members")
+                    .populate("posts");
             } catch (err) {
                 throw new Error("Failed to fetch clubs");
             }

@@ -7,6 +7,7 @@ import App from './App.js'; // Ensure this is the correct path for your App comp
 const Homepage = React.lazy(() => import('./pages/Homepage.jsx'));
 const Error = React.lazy(() => import('./pages/Error.jsx'));
 const UserComponent = React.lazy(() => import('./components/User/UserComponent.jsx')); // Fixed lazy loading
+const CommunityPage = React.lazy(() => import('./pages/CommunityPage.jsx'));
 
 const router = createBrowserRouter([
     {
@@ -20,12 +21,19 @@ const router = createBrowserRouter([
             },
             {
                 path: 'users',
+                //! XXX: Only put pages here
+                //! Make UserDisplayerPage unless this is for testing
+                //! @Ahmed
                 element: <UserComponent />,  // Lazy-loaded user component
             },
             {
                 path: 'users/:userId', 
                 element: <UserProfile />
             },
+            {
+                path: 'community',
+                element: <CommunityPage />
+            }
         ],
     },
 ]);
