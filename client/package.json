@@ -9,7 +9,7 @@
         "cors": "^2.8.5",
         "graphql": "^16.9.0",
         "graphql-tag": "^2.12.6",
-        "vite": "^4.0.0",
+        "vite": "^5.0.0",
         "vue": "^3.2.45",
         "vue-apollo": "^3.1.2",
         "vue-router": "^4.1.6"
