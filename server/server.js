@@ -16,6 +16,10 @@ const app = express();
 // Librarian for book data
 const librarian = new Librarian(process.env.GOOGLE_BOOKS_API_URL);
 
+// Middleware for parsing JSON and urlencoded data
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
 // Configure Express Middleware and Routes
 const configureExpress = (app) => {
     // CORS setup
@@ -26,9 +30,6 @@ const configureExpress = (app) => {
         credentials: true,
     }));
 
-    // Middleware for parsing JSON and urlencoded data
-    app.use(express.json());
-    app.use(express.urlencoded({ extended: true }));
 
     // REST API Route for fetching book data
     app.get('/api/bookdata/:endpoint', async (req, res) => {
