@@ -10,6 +10,7 @@ const typeDefs = gql`
         email: String!
         booksRead: [Book]
         friends: [User]
+
     }
 
     # Book Type
@@ -21,19 +22,20 @@ const typeDefs = gql`
         description: String
         image: String
         blob: Int
+        comments: [Comment]
     }
 
-    # Comment Type
     type Comment {
         _id: ID!
         title: String!
         content: String
         author: User!
+        bookId: ID!    # This links the comment to a specific book
         blob: Int
         createdAt: Date
         updatedAt: Date
-    }
-
+      }
+      
     # Comment Input Type
     input CommentInput {
         title: String!
@@ -121,6 +123,8 @@ const typeDefs = gql`
         # User's wishcart (for books)
         getUserWishcart(user_Id: ID!): [Book]
     }
+
+
 
     # Mutation Type Definitions
     type Mutation {
