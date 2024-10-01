@@ -1,18 +1,20 @@
 <template>
-    <div>
-        <h1>Communities</h1>
-        <p>These are some of our communities</p>
-        <ClubList />
-    </div>
+  <div>
+    <h1>Community</h1>
+    <CommunityList />
+  </div>
 </template>
 
 <script>
-import ClubList from '@/components/ClubList.vue';
+import CommunityList from '../components/CommunityList.vue';
 
 export default {
-    name: 'CommunityPage',
-    components: {
-        ClubList,
-    },
+  components: {
+    CommunityList
+  }
 };
 </script>
+
+<style scoped>
+/* Add your styles here */
+</style>
