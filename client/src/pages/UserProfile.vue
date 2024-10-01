@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
     <div>
         <div v-if="loading">Loading...</div>
         <div v-if="error">Error: {{ error.message }}</div>
@@ -44,4 +44,39 @@ export default {
         return { loading, error, data };
     },
 };
-</script>
+</script> -->
+
+
+<template>
+    <div>
+      <div v-if="loading">Loading...</div>
+      <div v-if="error">Error: {{ error.message }}</div>
+      <div v-if="data">
+        <h1>{{ data.me.username }}'s Profile</h1>
+        <p>Email: {{ data.me.email }}</p>
+        <h3>Friends:</h3>
+        <ul>
+          <li v-for="friend in data.me.friends" :key="friend._id">{{ friend.username }}</li>
+        </ul>
+      </div>
+    </div>
+  </template>
+  
+  <script>
+  import { useQuery } from '@vue/apollo-composable';
+  import { GET_ME } from '@/utils/queries/userQueries';
+  
+  export default {
+    name: 'UserProfile',
+    setup() {
+      const { result, loading, error } = useQuery(GET_ME);
+  
+      return {
+        loading,
+        error,
+        data: result,
+      };
+    }
+  };
+  </script>
+  
