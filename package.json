@@ -4,9 +4,9 @@
     "description": "TBD",
     "main": "index.js",
     "scripts": {
-        "start": "node server/server.js",
+        "start": "cd client && npm start",
         "build": "cd client && npm install && npm run build", 
-        "client": "cd client && npm start",
+        "server": "cd server && npm server.js",
         "dev": "concurrently \"cd server && npm run watch\" \"cd client && npm start\"",
         "install": "cd server && npm i && cd ../client && npm i",
         "seed": "cd server && npm run seed"
