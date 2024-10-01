@@ -28,8 +28,7 @@ connection.on("error", (error) => {
 app.use(
     cors({
         origin: [
-            "http://localhost:5173",
-            "https://studio.apollographql.com",
+            "https://book-club-1.onrender.com",
             "https://book-club-8svz.onrender.com",
         ], // Allow these origins
         credentials: true, // Allow sending cookies and credentials
