@@ -35,6 +35,33 @@ app.use(
     })
 );
 
+// Add this proxy route for handling LaunchDarkly requests
+app.post('/api/launchdarkly/events', async (req, res) => {
+    try {
+        const launchdarklyUrl = 'https://events.launchdarkly.com/events/bulk/616efd128d68b4252e2e5f14';
+        
+        // Forward the request to LaunchDarkly
+        const response = await fetch(launchdarklyUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-LaunchDarkly-User-Agent': 'JSClient/2.24.2',
+                'X-LaunchDarkly-Wrapper': 'react-client-sdk/2.29.4',
+                'X-LaunchDarkly-Event-Schema': '3',
+                'X-LaunchDarkly-Payload-ID': req.body.payloadId, // Assuming you pass it from the client
+            },
+            body: JSON.stringify(req.body), // Forward the request body
+        });
+
+        const data = await response.json();
+        res.status(response.status).json(data);
+    } catch (error) {
+        console.error('Error sending LaunchDarkly event:', error);
+        res.status(500).json({ error: 'Error sending event to LaunchDarkly' });
+    }
+});
+
+
 app.options('*', cors());
 app.use((req, res, next) => {
     console.log(res.getHeader());
