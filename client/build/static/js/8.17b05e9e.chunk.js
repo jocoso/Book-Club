@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkbook_club_hub=self.webpackChunkbook_club_hub||[]).push([[8],{8:(e,u,b)=>{b.r(u),b.d(u,{default:()=>h});var c=b(414);const h=()=>(0,c.jsx)("div",{children:(0,c.jsx)("h1",{children:"ErrorPage"})})}}]);

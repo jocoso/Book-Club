@@ -32,7 +32,8 @@
 // };
 // module.exports = connectDB;
 
-require('dotenv').config(); 
+require('dotenv').config({ path: '../.env' });  // Adjust path relative to the `connection.js` file
+
 const mongoose = require('mongoose');
 
 const connectDB = async () => {

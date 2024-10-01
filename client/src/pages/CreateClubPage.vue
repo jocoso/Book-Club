@@ -1,16 +1,16 @@
 <template>
   <div>
-    <h1>Community</h1>
-    <CommunityList />
+    <h1>Create a New Club</h1>
+    <CreateClubForm />
   </div>
 </template>
 
 <script>
-import CommunityList from '../components/CommunityList.vue';
+import CreateClubForm from '../components/CreateClubForm.vue';
 
 export default {
   components: {
-    CommunityList
+    CreateClubForm
   }
 };
 </script>

@@ -1,11 +1,18 @@
 // src/router/index.js
 
 import { createRouter, createWebHistory } from "vue-router";
-import HomePage from "@/pages/HomePage.vue"; // Import your HomePage component
-import UserComponent from "@/components/UserComponent.vue"; // Direct import of UserComponent
-import UserProfile from "@/pages/UserProfile.vue"; // Direct import of UserProfile
-import CommunityPage from "@/pages/CommunityPage.vue"; // Direct import of CommunityPage
-import ErrorPage from "@/pages/ErrorPage.vue"; // Direct import of ErrorPage
+import HomePage from "@/pages/HomePage.vue";
+import UserComponent from "@/components/UserComponent.vue";
+import UserProfile from "@/pages/UserProfile.vue";
+import CommunityPage from "@/pages/CommunityPage.vue";
+import ErrorPage from "@/pages/ErrorPage.vue";
+
+// Import your new pages
+import SuggestionPage from "@/pages/SuggestionPage.vue";
+import CreateClubPage from "@/pages/CreateClubPage.vue";
+import ClubPage from "@/pages/ClubPage.vue";
+import SignupPage from "@/pages/SignupPage.vue";
+import LoginPage from "@/pages/LoginPage.vue";
 
 const routes = [
     {
@@ -27,6 +34,31 @@ const routes = [
         path: "/community",
         name: "CommunityPage",
         component: CommunityPage,
+    },
+    {
+        path: "/suggestions",
+        name: "SuggestionPage",
+        component: SuggestionPage,
+    },
+    {
+        path: "/create-club",
+        name: "CreateClubPage",
+        component: CreateClubPage,
+    },
+    {
+        path: "/club/:clubId",
+        name: "ClubPage",
+        component: ClubPage,
+    },
+    {
+        path: "/signup",
+        name: "SignupPage",
+        component: SignupPage,
+    },
+    {
+        path: "/login",
+        name: "LoginPage",
+        component: LoginPage,
     },
     {
         path: "/:catchAll(.*)",
