@@ -1,0 +1,65 @@
+[
+    {
+        "_id": "64e5b6f14f1b4a0012d8f123",
+        "name": "Fantasy Fanatics",
+        "description": "A club for those who love immersing themselves in fantastical worlds full of magic and mythical creatures.",
+        "img": null,
+        "founder": "64dfb9206a9f5c0012c90c01",
+        "members": ["64dfb9206a9f5c0012c90c02", "64dfb9206a9f5c0012c90c03"],
+        "posts": []
+    },
+    {
+        "_id": "64e5b6f14f1b4a0012d8f124",
+        "name": "Classic Literature Circle",
+        "description": "A place for lovers of timeless classics to discuss the works of great authors like Austen, Dickens, and Shakespeare.",
+        "img": null,
+        "founder": "64dfb9206a9f5c0012c90c02",
+        "members": ["64dfb9206a9f5c0012c90c01", "64dfb9206a9f5c0012c90c04"],
+        "posts": []
+    },
+    {
+        "_id": "64e5b6f14f1b4a0012d8f125",
+        "name": "Mystery Readers Society",
+        "description": "For those who enjoy unraveling the clues and solving the mysteries in their favorite whodunit novels.",
+        "img": null,
+        "founder": "64dfb9206a9f5c0012c90c03",
+        "members": ["64dfb9206a9f5c0012c90c05", "64dfb9206a9f5c0012c90c06"],
+        "posts": []
+    },
+    {
+        "_id": "64e5b6f14f1b4a0012d8f126",
+        "name": "Science Fiction Enthusiasts",
+        "description": "A community for readers fascinated by futuristic worlds, space travel, and cutting-edge technology in fiction.",
+        "img": null,
+        "founder": "64dfb9206a9f5c0012c90c04",
+        "members": ["64dfb9206a9f5c0012c90c03", "64dfb9206a9f5c0012c90c07"],
+        "posts": []
+    },
+    {
+        "_id": "64e5b6f14f1b4a0012d8f127",
+        "name": "Historical Fiction Group",
+        "description": "A gathering for readers who love exploring history through the lens of engaging and vivid fictional narratives.",
+        "img": null,
+        "founder": "64dfb9206a9f5c0012c90c05",
+        "members": ["64dfb9206a9f5c0012c90c06", "64dfb9206a9f5c0012c90c08"],
+        "posts": []
+    },
+    {
+        "_id": "64e5b6f14f1b4a0012d8f128",
+        "name": "Romance Novel Readers",
+        "description": "A cozy space for fans of romance novels to discuss heartwarming love stories and unforgettable characters.",
+        "img": null,
+        "founder": "64dfb9206a9f5c0012c90c06",
+        "members": ["64dfb9206a9f5c0012c90c04", "64dfb9206a9f5c0012c90c09"],
+        "posts": []
+    },
+    {
+        "_id": "64e5b6f14f1b4a0012d8f129",
+        "name": "Non-Fiction Knowledge Seekers",
+        "description": "For those who enjoy expanding their minds with biographies, self-help, and other non-fiction genres.",
+        "img": null,
+        "founder": "64dfb9206a9f5c0012c90c07",
+        "members": ["64dfb9206a9f5c0012c90c02", "64dfb9206a9f5c0012c90c10"],
+        "posts": []
+    }
+]

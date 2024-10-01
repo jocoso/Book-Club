@@ -10,6 +10,11 @@ const postSchema = new Schema(
             type: String,
             required: true,
         },
+        parentClub: {
+            type: Schema.Types.ObjectId,
+            ref: 'Club',
+            required: true,
+        },
         author: {
             type: Schema.Types.ObjectId,
             ref: 'User',
@@ -22,6 +27,12 @@ const postSchema = new Schema(
         media: [
             {
                 type: String,
+                validate: {
+                    validator: function(v) {
+                        return /^(ftp|http|https):\/\/[^ "]+$/.test(v);
+                    },
+                    message: props => `${props.value} is not a valid URL!`
+                },
             },
         ],
         comments: [
@@ -35,9 +46,15 @@ const postSchema = new Schema(
         toJSON: {
             virtuals: true,
         },
+        timestamps: true, // Automatically adds createdAt and updatedAt fields
     }
 );
 
+// Add virtual for comment count
+postSchema.virtual('commentCount').get(function () {
+    return this.comments.length;
+});
+
 const Post = model('Post', postSchema);
 
-module.exports = Post; 
+module.exports = Post;
