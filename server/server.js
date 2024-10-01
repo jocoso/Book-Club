@@ -32,7 +32,7 @@ const librarian = new Librarian(process.env.GOOGLE_BOOKS_API_URL);
 const configureExpress = (app) => {
     // CORS setup
     app.use(cors({
-        origin: ['http://localhost:3000', 'https://studio.apollographql.com'],
+        origin: ['http://localhost:5173', 'https://studio.apollographql.com', 'https://book-club-8svz.onrender.com/'],
         methods: 'GET,POST',
         allowedHeaders: 'Content-Type,Authorization',
         credentials: true,
@@ -58,7 +58,7 @@ const configureExpress = (app) => {
     if (process.env.NODE_ENV === "production") {
         app.use(express.static(path.join(__dirname, "../client/build")));
         app.get("*", (req, res) => {
-            res.sendFile(path.join(__dirname, "../client/build/index.html"));
+            res.sendFile(path.join(__dirname, "../client/dist/index.html"));
         });
     }
 };
@@ -92,7 +92,7 @@ const startServer = async () => {
     }
 
     // Start Express server
-    app.listen(PORT, () => {
+    app.listen(PORT, '0.0.0.0', () => {
         console.log(`🌍 API server running on http://localhost:${PORT}!`);
         console.log(`🚀 Use GraphQL at http://localhost:${PORT}/graphql`);
     });

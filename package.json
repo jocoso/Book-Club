@@ -1,23 +1,25 @@
 {
-  "name": "Book-Club",
-  "version": "1.0.0",
-  "description": "TBD",
-  "main": "index.js",
-  "scripts": {
-    "start": "node server/server.js",
-    "client": "cd client && npm run start",
-    "dev": "concurrently \"cd server && npm run watch\" \"cd client && npm run start\"",
-    "install": "cd server && npm i && cd ../client && npm i",
-    "seed": "cd server && npm run seed",
-    "build": "cd client && npm run build"
-  },
-  "author": "",
-  "license": "ISC",
-  "dependencies": {
-    "apollo-server": "^3.13.0",
-    "concurrently": "^9.0.1",
-    "graphql": "^16.9.0",
-    "jsonwebtoken": "^9.0.2",
-    "mongoose": "^8.7.0"
-  }
+    "name": "Book-Club",
+    "version": "1.0.0",
+    "description": "TBD",
+    "main": "index.js",
+    "scripts": {
+        "start": "cd client && npm run dev",
+        "build": "cd client && npm install && npm run build", 
+        "server": "cd server && npm server.js",
+        "dev": "concurrently \"cd server && npm run watch\" \"cd client && npm start\"",
+        "install": "cd server && npm i && cd ../client && npm i",
+        "seed": "cd server && npm run seed"
+    },
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "@vitejs/plugin-vue": "^4.6.2",
+        "apollo-server": "^3.13.0",
+        "concurrently": "^9.0.1",
+        "graphql": "^16.9.0",
+        "jsonwebtoken": "^9.0.2",
+        "mongoose": "^8.7.0",
+        "vite": "^5.4.8"
+    }
 }
