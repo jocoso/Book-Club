@@ -1,56 +1,41 @@
 <template>
     <div>
-        <div v-if="loading">Loading...</div>
-        <div v-if="error">Error: {{ error.message }}</div>
-        <ul v-if="data">
+        <ul v-if="data && data.users && data.users.length">
+            <!-- Map through the users and display each one -->
             <li v-for="user in data.users" :key="user._id">
                 {{ user.username }} - {{ user.email }}
-                <!-- Add friend button, replace 'loggedInUserId' with actual ID -->
-                <button @click="handleAddFriend(loggedInUserId, user._id)">Add Friend</button>
+                <button @click="handleAddFriend('loggedInUserId', user._id)">Add Friend</button>
             </li>
         </ul>
+        <p v-else>No users found</p> <!-- Display message when no users are available -->
     </div>
 </template>
 
 <script>
-import { useQuery } from '@vue/apollo-composable'; 
-import { useMutation } from '@vue/apollo-composable';
-import { ref } from 'vue';
-import { GET_ALL_USERS } from '@/utils/queries/userQueries.js';
-import { ADD_FRIEND } from '@/utils/mutations/userMutations.js';
+import { useQuery } from '@vue/apollo-composable';
+import { GET_ALL_USERS } from '@/utils/queries/userQueries';
+import { ADD_FRIEND } from '@/utils/mutations/userMutations';
 
 export default {
-    name: 'UserComponent',
     setup() {
-        const loading = ref(true);
-        const error = ref(null);
-        const data = ref(null);
-        const loggedInUserId = 'loggedInUserId'; // Replace this with the actual logged-in user's ID
+        // Fetch all users using the GET_ALL_USERS query
+        const { result, loading, error } = useQuery(GET_ALL_USERS);
 
-        const { result, loading: apolloLoading, error: apolloError } = useQuery(GET_ALL_USERS);
-        const [addFriend] = useMutation(ADD_FRIEND);
-
-        const handleAddFriend = (userId, friendId) => {
-            addFriend({ variables: { userId, friendId } })
-                .then((response) => {
-                    console.log('Friend added:', response.data.addFriend);
-                })
-                .catch((err) => {
-                    console.error('Error adding friend:', err);
-                });
+        // Handler function to add a friend
+        const handleAddFriend = async (userId, friendId) => {
+            try {
+                const response = await mutate({ variables: { userId, friendId } });
+                console.log('Friend added:', response.data.addFriend);
+            } catch (err) {
+                console.error('Error adding friend:', err);
+            }
         };
 
-        // Update data states on mount
-        loading.value = apolloLoading;
-        error.value = apolloError;
-        data.value = result;
-
         return {
+            data: result, // Automatically updated with query result
             loading,
             error,
-            data,
             handleAddFriend,
-            loggedInUserId,
         };
     },
 };
