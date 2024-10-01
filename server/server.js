@@ -13,15 +13,16 @@ const app = express();
 
 // Make sure CORS middleware is applied before all other routes
 app.use(
-  cors({
-    origin: [
-      "https://book-club-1.onrender.com", // Allow requests from your server
-      "http://localhost:5173", // Allow requests from localhost for local development
-    ],
-    methods: ["GET", "POST", "OPTIONS"], // Allow the necessary HTTP methods
-    allowedHeaders: ["Content-Type", "Authorization"], // Allow necessary headers
-    credentials: true, // Allow credentials (like cookies, tokens)
-  })
+    cors({
+        origin: [
+            "https://book-club-1.onrender.com", // Frontend domain
+            "https://book-club-8svz.onrender.com", // Another possible frontend
+            "http://localhost:5173", // For local development
+        ],
+        methods: ["GET", "POST", "OPTIONS"], // Allow the necessary HTTP methods
+        allowedHeaders: ["Content-Type", "Authorization"], // Allow required headers
+        credentials: true, // Allow credentials (like cookies, tokens)
+    })
 );
 
 // Middleware for parsing JSON and urlencoded data
@@ -63,7 +64,9 @@ const startServer = async () => {
     // Start Express server
     app.listen(PORT, "0.0.0.0", () => {
         console.log(`🌍 API server running on http://localhost:${PORT}!`);
-        console.log(`🚀 Use GraphQL at https://book-club-1.onrender.com/graphql`);
+        console.log(
+            `🚀 Use GraphQL at https://book-club-1.onrender.com/graphql`
+        );
     });
 };
 
