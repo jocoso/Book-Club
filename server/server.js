@@ -13,23 +13,24 @@ const app = express();
 
 // Apply CORS middleware before all other routes
 app.use(
-  cors({
-    origin: [
-      "https://book-club-1.onrender.com", // Frontend production URL
-      "https://book-club-8svz.onrender.com", // Another frontend production URL (if needed)
-      "http://localhost:5173", // For local development
-    ],
-    methods: ["GET", "POST", "OPTIONS"], // Allow the necessary HTTP methods
-    allowedHeaders: ["Content-Type", "Authorization"], // Allow required headers
-    credentials: true, // Allow credentials (like cookies, tokens)
-  })
+    cors({
+        origin: [
+            "https://book-club-1.onrender.com", // Frontend production URL
+            "http://localhost:5173", // Local development (if necessary)
+            "https://book-club-8svz.onrender.com"
+        ],
+        methods: ["GET", "POST", "OPTIONS"], // Allow necessary HTTP methods
+        allowedHeaders: ["Content-Type", "Authorization"], // Allow required headers
+        credentials: true, // Allow credentials (like cookies, tokens)
+    })
 );
+
 
 // Middleware for parsing JSON and urlencoded data
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Serve static files in production (for Vite)
+// Serve static files in production (for Vite or React)
 if (process.env.NODE_ENV === "production") {
     app.use(express.static(path.join(__dirname, "../client/dist")));
     app.get("*", (req, res) => {
@@ -48,7 +49,7 @@ const startServer = async () => {
 
         await server.start();
 
-        // Apply Apollo middleware with CORS already configured
+        // Apply Apollo middleware with authentication
         app.use(
             "/graphql",
             expressMiddleware(server, {
@@ -64,9 +65,14 @@ const startServer = async () => {
     // Start Express server
     app.listen(PORT, "0.0.0.0", () => {
         console.log(`🌍 API server running on http://localhost:${PORT}!`);
-        console.log(`🚀 Use GraphQL at https://book-club-1.onrender.com/graphql`);
+        console.log(
+            `🚀 Use GraphQL at https://book-club-1.onrender.com/graphql`
+        );
     });
 };
 
-// Connect to MongoDB and start the server
-startServer();
+// Connect to the database and start the server
+connection.once("open", startServer);
+connection.on("error", (error) => {
+    console.error("MongoDB connection error:", error);
+});
