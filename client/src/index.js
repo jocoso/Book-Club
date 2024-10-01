@@ -1,6 +1,8 @@
 import ReactDOM from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import React, { Suspense } from 'react';
+import { AuthProvider } from './context/AuthContext';
+import ProtectedRoute from './components/ProtectedRoutes/ProtectedRoute'; // Import ProtectedRoute
 import UserProfile from './pages/UserProfile';
 import App from './App.js'; // Ensure this is the correct path for your App component
 
@@ -21,14 +23,15 @@ const router = createBrowserRouter([
             },
             {
                 path: 'users',
-                //! XXX: Only put pages here
-                //! Make UserDisplayerPage unless this is for testing
-                //! @Ahmed
-                element: <UserComponent />,  // Lazy-loaded user component
+                element: <ProtectedRoute> {/* Protect this route */}
+                    <UserComponent />
+                </ProtectedRoute>,
             },
             {
-                path: 'users/:userId', 
-                element: <UserProfile />
+                path: 'users/:userId',
+                element: <ProtectedRoute> {/* Protect this route */}
+                    <UserProfile />
+                </ProtectedRoute>,
             },
             {
                 path: 'community',
@@ -39,8 +42,10 @@ const router = createBrowserRouter([
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")).render(
-    <Suspense fallback={<div>Loading...</div>}>
-        <RouterProvider router={router} />
-    </Suspense>
+    <AuthProvider> {/* Wrap everything inside AuthProvider */}
+        <Suspense fallback={<div>Loading...</div>}>
+            <RouterProvider router={router} />
+        </Suspense>
+    </AuthProvider>
 );
 
