@@ -1,4 +1,4 @@
-const bcrypt = require('bcryptjs');
+const bcrypt = require("bcryptjs");
 const { AuthenticationError } = require("apollo-server-express"); // Use proper package for error handling
 const { signToken } = require("../utils/auth");
 const { User, Book, Club, Comment, Post, Review } = require("../models");
@@ -129,30 +129,30 @@ const resolvers = {
         addUser: async (parent, { username, email, password }) => {
             try {
                 console.log("Hashing password for:", email); // Debug line
-      
-        // Hash the password
-        const hashedPassword = await bcrypt.hash(password, 10);
-      
-        console.log("Password hashed successfully:", hashedPassword); // Debug line
-      
-        // Create the new user with the hashed password
-        const user = await User.create({
-           username,
-           email,
-           password: hashedPassword
-        });
 
-        console.log("User created successfully:", user); // Debug line
+                // Hash the password
+                const hashedPassword = await bcrypt.hash(password, 10);
 
-        // Generate a token
-        const token = signToken(user);
+                console.log("Password hashed successfully:", hashedPassword); // Debug line
 
-        return { token, user };
-        } catch (err) {
-          console.error("Error in addUser resolver:", err); // More detailed error
-          throw new Error('Failed to create user');
-        }
-        },  
+                // Create the new user with the hashed password
+                const user = await User.create({
+                    username,
+                    email,
+                    password: hashedPassword,
+                });
+
+                console.log("User created successfully:", user); // Debug line
+
+                // Generate a token
+                const token = signToken(user);
+
+                return { token, user };
+            } catch (err) {
+                console.error("Error in addUser resolver:", err); // More detailed error
+                throw new Error("Failed to create user");
+            }
+        },
         // Login an existing user
         login: async (parent, { email, password }) => {
             try {

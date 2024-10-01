@@ -37,18 +37,10 @@ const userSchema = new Schema({
   },
 });
 
-//Hash the password before saving
-userSchema.pre('save', async function(next) {
-    if (this.isNew || this.isModified('password')) {
-        const saltRounds = 10;
-        this.password = await bcrypt.hash(this.password, saltRounds);
-    }
-    next();
-});
-
 //Method to compare input password with hashed password
 userSchema.methods.isCorrectPassword = async function(password) {
-    return bcrypt.compare(password, this.password);
+  const hashedPassword = await bcrypt.hash(password, 10);
+    return bcrypt.compareSync(this.password, hashedPassword);
 };
 
 // Exporting the User model
