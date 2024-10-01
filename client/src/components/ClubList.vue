@@ -2,7 +2,7 @@
     <div>
         <div v-if="loading">Loading...</div>
         <div v-if="error">Error: {{ error.message }}</div>
-        <ul v-if="data">
+        <ul v-if="data && data.clubs">
             <li v-for="club in data.clubs" :key="club._id">
                 <router-link to="/community">
                     <ClubCard :club="club" />
@@ -13,8 +13,7 @@
 </template>
 
 <script>
-import { useQuery } from '@vue/apollo-composable'; 
-import { ref, onMounted } from 'vue';
+import { useQuery } from '@vue/apollo-composable';
 import ClubCard from '@/components/ClubCard.vue';
 import { GET_ALL_CLUBS } from '@/utils/queries/clubQueries';
 
@@ -24,18 +23,10 @@ export default {
         ClubCard,
     },
     setup() {
-        const loading = ref(true);
-        const error = ref(null);
-        const data = ref(null);
+        // Apollo provides these reactive variables directly
+        const { result: data, loading, error } = useQuery(GET_ALL_CLUBS);
 
-        const { result, loading: apolloLoading, error: apolloError } = useQuery(GET_ALL_CLUBS);
-
-        onMounted(() => {
-            loading.value = apolloLoading;
-            error.value = apolloError;
-            data.value = result;
-        });
-
+        // No need for onMounted because Apollo automatically manages the data flow
         return {
             loading,
             error,
