@@ -26,6 +26,11 @@ app.use(
 );
 
 app.options('*', cors());
+app.use((req, res, next) => {
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    console.log(res.getHeader());
+    next();
+});
 
 // Middleware for parsing JSON and urlencoded data
 app.use(express.json());
@@ -54,7 +59,6 @@ const startServer = async () => {
         // Apply Apollo middleware with authentication
         app.use(
             "/graphql",
-            cors(),
             expressMiddleware(server, {
                 context: async ({ req }) => authMiddleware({ req }),
             })
