@@ -46,6 +46,7 @@ const startServer = async () => {
             typeDefs,
             resolvers,
             introspection: true, // Enable introspection for Apollo Studio
+            playground: true,
         });
 
         await server.start();
@@ -53,6 +54,7 @@ const startServer = async () => {
         // Apply Apollo middleware with authentication
         app.use(
             "/graphql",
+            cors(),
             expressMiddleware(server, {
                 context: async ({ req }) => authMiddleware({ req }),
             })
