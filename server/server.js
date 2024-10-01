@@ -5,25 +5,13 @@ const { ApolloServer } = require("@apollo/server");
 const { expressMiddleware } = require("@apollo/server/express4");
 const path = require("path");
 const { typeDefs, resolvers } = require("./schemas");
-const { connection } = require("./config/connection");
+const connectDB = require("./config/connection");
 const { authMiddleware } = require("./utils/auth");
 const cors = require('cors');
 const Librarian = require('./utils/librarian');
 
 const PORT = process.env.PORT || 3001;
 const app = express();
-
-// MongoDB connection error handling and retry mechanism
-const connectWithRetry = () => {
-    console.log('Attempting to connect to MongoDB...');
-    return connection.once('open', startServer);
-};
-
-connection.on("error", (error) => {
-    console.error("MongoDB Connection error:", error);
-    console.log('Retrying connection in 5 seconds...');
-    setTimeout(connectWithRetry, 5000);
-});
 
 // Librarian for book data
 const librarian = new Librarian(process.env.GOOGLE_BOOKS_API_URL);
@@ -66,9 +54,10 @@ const configureExpress = (app) => {
 // Start Apollo Server and Express App
 // Start Apollo Server and Express App
 const startServer = async () => {
-    configureExpress(app);
-
     try {
+        await connectDB();
+        configureExpress(app);
+
         const server = new ApolloServer({
             typeDefs,
             resolvers,
@@ -85,19 +74,16 @@ const startServer = async () => {
                 context: async ({ req }) => authMiddleware({ req }),
             })
         );
-
-        console.log("🚀 Apollo Server running at /graphql");
     } catch (error) {
         console.error("Error starting Apollo Server:", error);
     }
 
     // Start Express server
-    app.listen(PORT, () => {
+    app.listen(PORT, '0.0.0.0', () => {
         console.log(`🌍 API server running on http://localhost:${PORT}!`);
         console.log(`🚀 Use GraphQL at http://localhost:${PORT}/graphql`);
     });
 };
 
 
-// Connect to MongoDB and start the server
-connectWithRetry();
+startServer();

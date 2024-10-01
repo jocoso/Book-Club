@@ -1,6 +1,6 @@
 
-13
-const { connectDB, connection } = require('../config/connection'); // Import the connectDB and connection
+
+const connectDB= require('../config/connection'); // Import the connectDB and connection
 const bookSeeds = require("./bookSeeds.json");
 const reviewSeeds = require("./reviewSeeds.json");
 const userSeeds = require("./userSeeds.json");
@@ -26,7 +26,7 @@ const seedDatabase = async () => {
       await connectDB();
   
       // Wait until the connection is open before proceeding
-      connection.once('open', async () => {
+      connectDB.once('open', async () => {
         try {
           // Clean and seed all collections
           for (const seed of seeders) {
