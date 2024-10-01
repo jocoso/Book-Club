@@ -1,4 +1,4 @@
-import { gql } from "@apollo/client";
+import { gql } from "graphql-tag";
 
 //Add new user
 export const ADD_USER = gql`

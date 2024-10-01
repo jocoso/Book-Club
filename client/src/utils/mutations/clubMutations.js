@@ -1,4 +1,4 @@
-import { gql } from "@apollo/client";
+import { gql } from "graphql-tag";
 
 // Adds a club
 export const ADD_CLUB = gql`

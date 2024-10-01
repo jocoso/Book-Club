@@ -1,6 +1,6 @@
-import { gql } from "@apollo/client";
+import { gql } from "graphql-tag";
 
-//Mutation to get all clubs in database
+// Query to get all clubs in the database
 export const GET_ALL_CLUBS = gql`
     query Clubs {
         clubs {
@@ -40,7 +40,7 @@ export const GET_ALL_CLUBS = gql`
     }
 `;
 
-// Mutation to get one club in the database
+// Query to get one club by its ID in the database
 export const GET_CLUB_BY_ID = gql`
     query getClub($_id: ID!) {
         club(_id: $_id) {

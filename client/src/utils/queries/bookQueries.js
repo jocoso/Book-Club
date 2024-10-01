@@ -1,6 +1,6 @@
-import { gql } from "@apollo/client";
+import { gql } from "graphql-tag";
 
-//Mutation to get all books in database
+// Query to get all books in the database
 export const GET_ALL_BOOKS = gql`
     query getBooks {
         books {
@@ -14,6 +14,7 @@ export const GET_ALL_BOOKS = gql`
     }
 `;
 
+// Query to get a limited number of books
 export const GET_X_BOOKS = gql`
     query Books($limit: Int) {
         books(limit: $limit) {
