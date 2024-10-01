@@ -11,14 +11,24 @@ require("dotenv").config();
 const PORT = process.env.PORT || 3001;
 const app = express();
 
+// CORS setup with dynamic origin handling
+const allowedOrigins = [
+    "https://book-club-1.onrender.com", // Frontend production URL
+    "http://localhost:5173", // Local development (if necessary)
+    "https://book-club-8svz.onrender.com"
+];
+
 // Apply CORS middleware before all other routes
 app.use(
     cors({
-        origin: [
-            "https://book-club-1.onrender.com", // Frontend production URL
-            "http://localhost:5173", // Local development (if necessary)
-            "https://book-club-8svz.onrender.com"
-        ],
+        origin: (origin, callback) => {
+            if(!origin) return callback(null, true);
+            if(allowedOrigins.includes(origin)) {
+                return callback(null, true);
+            } else {
+                return callback(new Error('Not allowed by CORS'))
+            }
+        },
         methods: ["GET", "POST", "OPTIONS"], // Allow necessary HTTP methods
         allowedHeaders: ["Content-Type", "Authorization"], // Allow required headers
         credentials: true, // Allow credentials (like cookies, tokens)
@@ -27,7 +37,6 @@ app.use(
 
 app.options('*', cors());
 app.use((req, res, next) => {
-    res.setHeader("Access-Control-Allow-Origin", "*");
     console.log(res.getHeader());
     next();
 });
