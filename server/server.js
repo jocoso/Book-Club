@@ -25,6 +25,7 @@ app.use(
     })
 );
 
+app.options('*', cors());
 
 // Middleware for parsing JSON and urlencoded data
 app.use(express.json());
