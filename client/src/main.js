@@ -7,7 +7,7 @@ import router from "./router";
 // Use Vite's environment variable for API URL
 const cache = new InMemoryCache();
 const apolloClient = new ApolloClient({
-    uri: import.meta.env.VITE_API_URL, // Use environment variable here
+    uri: `${import.meta.env.VITE_API_URL}/graphql`, // Use environment variable here
     cache,
 });
 
