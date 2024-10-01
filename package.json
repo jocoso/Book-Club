@@ -5,11 +5,11 @@
     "main": "index.js",
     "scripts": {
         "start": "node server/server.js",
-        "client": "cd client && npm run dev",
-        "dev": "concurrently \"cd server && npm run watch\" \"cd client && npm run dev\"",
+        "build": "cd client && npm install && npm run build", 
+        "client": "cd client && npm start",
+        "dev": "concurrently \"cd server && npm run watch\" \"cd client && npm start\"",
         "install": "cd server && npm i && cd ../client && npm i",
-        "seed": "cd server && npm run seed",
-        "build": "cd client && npm run build"
+        "seed": "cd server && npm run seed"
     },
     "author": "",
     "license": "ISC",
