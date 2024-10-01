@@ -69,4 +69,4 @@ const startServer = async () => {
 };
 
 // Connect to MongoDB and start the server
-connectWithRetry();
+startServer();
