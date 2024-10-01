@@ -22,17 +22,20 @@ connection.on("error", (error) => {
     console.error("MongoDB Connection error:", error);
     console.log("Retrying connection in 5 seconds...");
     setTimeout(connectWithRetry, 5000);
-});
+};
 
-// Set up CORS with appropriate origins
+// CORS configuration to allow requests from frontend
 app.use(
-    cors({
-        origin: [
-            "https://book-club-1.onrender.com",
-            "https://book-club-8svz.onrender.com",
-        ], // Allow these origins
-        credentials: true, // Allow sending cookies and credentials
-    })
+  cors({
+    origin: [
+      "https://book-club-1.onrender.com", // Frontend domain
+      "https://book-club-8svz.onrender.com", // Frontend domain
+      "http://localhost:5173", // Local development URL (if testing locally)
+    ],
+    methods: ["GET", "POST", "OPTIONS"], // Allow necessary methods
+    allowedHeaders: ["Content-Type", "Authorization"], // Allow necessary headers
+    credentials: true, // Allow cookies/credentials
+  })
 );
 
 // Middleware for parsing JSON and urlencoded data
@@ -55,7 +58,7 @@ app.get("/api/bookdata/:endpoint", async (req, res) => {
     }
 });
 
-// Serve static files if in production (for Vite)
+// Serve static files in production (for Vite)
 if (process.env.NODE_ENV === "production") {
     app.use(express.static(path.join(__dirname, "../client/dist")));
     app.get("*", (req, res) => {
@@ -69,7 +72,7 @@ const startServer = async () => {
         const server = new ApolloServer({
             typeDefs,
             resolvers,
-            introspection: true, // Enable introspection in development
+            introspection: true, // Enable introspection
         });
 
         await server.start();
