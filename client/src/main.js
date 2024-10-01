@@ -4,9 +4,10 @@ import { ApolloClient, InMemoryCache } from "@apollo/client/core";
 import App from "./App.vue";
 import router from "./router";
 
+// Use Vite's environment variable for API URL
 const cache = new InMemoryCache();
 const apolloClient = new ApolloClient({
-    uri: "http://localhost:3001/graphql",
+    uri: import.meta.env.VITE_API_URL, // Use environment variable here
     cache,
 });
 
