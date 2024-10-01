@@ -106,8 +106,10 @@ const typeDefs = gql`
         books(limit: Int): [Book]
         book(_id: ID!): Book
         getBookData(isbn: ID!): Book
-        club(_id: ID!): Club # <-- Add this line
+        club(_id: ID!): Club 
         clubs: [Club]
+        
+        # Comment Queries
         comments: [Comment]
         comment(_id: ID!): Comment
         commentsByBook(bookId: ID!): [Comment]
@@ -122,6 +124,7 @@ const typeDefs = gql`
 
     # Mutation Type Definitions
     type Mutation {
+        # User Mutations
         addUser(username: String!, email: String!, password: String!): Auth
         login(email: String!, password: String!): Auth
         updateUser(

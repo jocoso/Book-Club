@@ -14,11 +14,6 @@ class Librarian {
     // Fetch book data from Google Books API
     async fetcher(bookId) {
         try {
-<<<<<<< HEAD
-            const response = await axios.get(`${this.apiUrl}?q=${bookId}`);
-            // console.log("rest", response.data.items[0].volumeInfo)
-            return response.data.items[0].volumeInfo;
-=======
             const response = await axios.get(`${this.apiUrl}?q=isbn:${bookId}`);
             const bookData =
                 response.data.items && response.data.items[0]?.volumeInfo;
@@ -26,7 +21,6 @@ class Librarian {
                 throw new Error(`No volumeInfo found for ID: ${bookId}`);
             }
             return bookData;
->>>>>>> c8e75c2a9f87614750dbf7da15fc590896c5a702
         } catch (error) {
             throw new Error(
                 `Failed to fetch book data for ID: ${bookId}. ${error.message}`
