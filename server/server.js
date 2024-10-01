@@ -23,7 +23,7 @@ connection.on("error", (error) => {
     console.error("MongoDB Connection error:", error);
     console.log("Retrying connection in 5 seconds...");
     setTimeout(connectWithRetry, 5000);
-});
+};
 
 // Librarian for book data
 const librarian = new Librarian(process.env.GOOGLE_BOOKS_API_URL);
@@ -82,7 +82,6 @@ const startServer = async () => {
             typeDefs,
             resolvers,
             introspection: true, // Enable introspection
-            playground: true, // Enable GraphQL playground in development
         });
 
         await server.start();
