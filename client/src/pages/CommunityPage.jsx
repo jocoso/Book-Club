@@ -1,4 +1,4 @@
-import ClubList from "../components/ClubList";
+import ClubList from "../components/ClubList/ClubList.jsx";
 
 const CommunityPage = () => {
     return (

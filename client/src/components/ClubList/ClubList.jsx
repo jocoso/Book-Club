@@ -1,7 +1,7 @@
 import { useQuery } from "@apollo/client";
 import { Link } from "react-router-dom";
-import ClubCard from "./ClubCard"; // Assuming ClubCard is in the same folder
-import { GET_ALL_CLUBS } from "../utils/queries/clubQueries";
+import ClubCard from "../ClubCard/ClubCard.jsx"; // Assuming ClubCard is in the same folder
+import { GET_ALL_CLUBS } from "../../utils/queries";
 
 const ClubList = () => {
     // Apollo Client's useQuery hook for fetching club data

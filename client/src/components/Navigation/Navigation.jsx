@@ -17,7 +17,7 @@ const Navigation = () => {
                     <Link to="/">Home</Link>
                 </li>
                 <li>
-                    <Link to="/book-clubs">Book Clubs</Link>
+                    <Link to="/communities">Communities</Link>
                 </li>
                 <li>
                     <Link to="/discussions/clubId">Discussions</Link>
