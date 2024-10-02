@@ -1,25 +1,40 @@
-import React, { useContext } from 'react';
-import { Link } from 'react-router-dom';
-import AuthContext from '@/store/authStore'; // Adjust path accordingly
+import  { useState } from 'react';
+import './UserLogin.css'; // Ensure this path is correct
 
-const LoginLogoutDisplay = () => {
-  const authStore = useContext(AuthContext);
+const UserLogin = () => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState(null);
 
-  const logout = () => {
-    authStore.logout();
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    // Handle login logic here
   };
 
   return (
-    <div>
-      {authStore.isLoggedIn ? (
-        <div>
-          Welcome! <button onClick={logout}>Logout</button>
-        </div>
-      ) : (
-        <Link to="/login">Login</Link>
-      )}
+    <div className="container">
+      <h2>Login</h2>
+      <form onSubmit={handleLogin}>
+        <input 
+          type="email" 
+          placeholder="Email" 
+          value={email} 
+          onChange={(e) => setEmail(e.target.value)} 
+          required 
+        />
+        <input 
+          type="password" 
+          placeholder="Password" 
+          value={password} 
+          onChange={(e) => setPassword(e.target.value)} 
+          required 
+        />
+        <button type="submit">Login</button>
+        {error && <p className="error-message">{error}</p>}
+      </form>
     </div>
   );
 };
 
-export default LoginLogoutDisplay;
+export default UserLogin;
+

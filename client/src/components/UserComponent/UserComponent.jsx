@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from 'react';
+import { createContext, useEffect, useState } from 'react';
 import { useQuery, useMutation } from '@apollo/client';
 import { useNavigate } from 'react-router-dom'; // Import useNavigate
 import { AuthContext, getUserId } from '../../contexts/AuthContexts.js'; // Ensure correct import path
@@ -7,7 +7,7 @@ import { ADD_FRIEND } from '../../utils/mutations/mutations.js';
 import UserCard from '../UserCard/UserCard'; // Import your UserCard component
 
 const UserComponent = () => {
-  const { user } = useContext(AuthContext); // Access the logged-in user from AuthContext
+  const { user } = createContext(AuthContext); // Access the logged-in user from AuthContext
   const [loggedInUserId, setLoggedInUserId] = useState(null); // Local state for user ID
   const navigate = useNavigate(); // Initialize navigate
 
@@ -54,6 +54,8 @@ const UserComponent = () => {
 
   return (
     <div className="user-list">
+      <p>It&apos;s a good day to learn React!</p>
+
       <h1>Welcome {user ? user.username : 'Guest'}</h1>
       {data && data.users && data.users.length ? (
         data.users.map((user) => (

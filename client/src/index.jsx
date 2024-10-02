@@ -11,6 +11,7 @@ import LoginPage from './pages/LoginPage.jsx';
 import SignupPage from './pages/SignupPage.jsx';
  // Import AuthProvider
 
+
 const router = createBrowserRouter([
     {
         path: "/",
@@ -61,7 +62,11 @@ const router = createBrowserRouter([
     },
 ]);
 
+
+
+
 ReactDOM.createRoot(document.getElementById("root")).render(
+    
     <AuthProvider> {/* Wrap your app with AuthProvider here */}
         <RouterProvider router={router} />
     </AuthProvider>

@@ -1,4 +1,4 @@
-/* :root {
+:root {
     font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
     line-height: 1.5;
     font-weight: 400;
@@ -29,6 +29,66 @@
     min-width: 320px;
     min-height: 100vh;
   }
+
+  /* General Styles */
+body {
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f4;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.container {
+  width: 100%;
+  max-width: 400px; /* Control form width */
+  background-color: white;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* Input Fields */
+input[type="text"], 
+input[type="email"], 
+input[type="password"] {
+  width: 100%;
+  padding: 12px;
+  margin: 10px 0;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-sizing: border-box;
+}
+
+/* Form Buttons */
+button {
+  background-color: #007bff;
+  color: white;
+  padding: 12px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  width: 100%;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+/* Error Message */
+.error-message {
+  color: red;
+  font-size: 14px;
+  margin-top: 10px;
+  text-align: center;
+}
+
   
   h1 {
     font-size: 3.2em;
@@ -53,6 +113,46 @@
   button:focus-visible {
     outline: 4px auto -webkit-focus-ring-color;
   }
+
+  .book-container {
+    padding: 20px; /* Adjust padding to reduce space */
+    margin-top: 10px; /* Reduce margin on the top if necessary */
+    font-size: 0.9em; /* Smaller font size to reduce space usage */
+    display: flex; /* Switch to a flex layout */
+    flex-wrap: wrap; /* Allow items to wrap */
+    justify-content: space-around; /* Distribute space around items */
+  }
+  
+  .book {
+    width: 30%; /* Adjust width to show more books per row */
+    margin: 10px; /* Ensure there is some space around books */
+  }
+  
+  /* Ensure the header is visible */
+  .header {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1000; /* Higher index to keep it on top */
+  }
+  
+
+/* Image styling to ensure it doesn't get too small */
+.book-item img {
+  width: 100px; /* Set the width of the book cover */
+  height: auto; /* Auto-adjust the height */
+  margin-right: 15px;
+}
+
+/* Reduce font-size if needed to fit more content */
+.book-item h3 {
+  font-size: 1.2em; /* Adjust based on how large/small you want it */
+}
+
+.book-item p {
+  font-size: 0.9em;
+}
+
   
   .card {
     padding: 2em;
@@ -65,6 +165,169 @@
     text-align: center;
   }
   
+  /* Main container for the nav */
+.nav-container {
+  background-color: #333; /* Background color for the navigation */
+  padding: 10px;
+}
+
+/* Make the nav-links horizontal and space them equally */
+.nav-links {
+  display: flex;
+  justify-content: space-between; /* Space the links equally */
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* Style individual links */
+.nav-links li {
+  flex: 1; /* Ensure each link takes up equal space */
+  text-align: center; /* Center the text in each link */
+}
+
+/* Style the anchor tags */
+.nav-links a {
+  display: block;
+  padding: 10px 15px;
+  color: white; /* Link color */
+  text-decoration: none; /* Remove underline */
+  font-size: 16px;
+  font-weight: bold;
+}
+
+/* Add hover effect */
+.nav-links a:hover {
+  background-color: #555; /* Change background on hover */
+}
+
+/* Navbar CSS */
+.navbar {
+  position: fixed; /* or sticky, depending on behavior */
+  top: 0;
+  width: 100%;
+  z-index: 1000; /* Ensure it stays above other elements */
+  background-color: #333;
+  color: white;
+  padding: 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Apply to your main container or body */
+body, html {
+  height: 100%;
+  margin: 0;
+}
+
+.container {
+  display: grid;
+  place-items: center;     /* Center both horizontally and vertically */
+  min-height: 100vh;       /* Full viewport height */
+}
+
+.container > * {
+  width: 100%;             /* Ensure content spans the entire width */
+  max-width: 1200px;       /* Adjust the max-width to your preference */
+  padding: 20px;
+}
+
+
+/* Book Container CSS */
+.book-container {
+  margin-top: 70px; /* Adjust this value to the height of the navbar */
+  padding: 20px;
+  background-color: #f9f9f9;
+}
+
+
+
+nav ul {
+  list-style-type: none;
+  display: flex;
+  margin: 0;
+  padding: 0;
+}
+
+nav ul li {
+  margin: 0 15px; /* Adjust the spacing between links */
+}
+
+nav ul li a {
+  text-decoration: none;
+  color: white;
+}
+
+nav ul li a:hover {
+  text-decoration: underline; /* Optional: Add hover effects */
+}
+
+  .user-cards-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* Responsive grid with 4-5 cards per row */
+    gap: 20px;
+    padding: 20px;
+    background-color: #1c3a6b; /* Dark-ish blue background */
+    border-radius: 8px;
+  }
+  
+  /* Styling individual UserCards */
+  .user-card {
+    background-color: #2a4d85; /* Slightly lighter dark blue for the cards */
+    color: white;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    transition: transform 0.3s ease;
+  }
+  
+  .user-card:hover {
+    transform: translateY(-5px); /* Add a hover effect to lift the card */
+  }
+  
+  /* Style for the Add Friend button */
+  .add-friend-btn {
+    background-color: #476dba; /* Another shade of blue */
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: background-color 0.3s ease;
+  }
+  
+  /* Change the button color when it becomes clickable (after login) */
+  .add-friend-btn.clickable {
+    background-color: #6792e4; /* Lighter clickable color */
+  }
+  
+  .add-friend-btn.disabled {
+    background-color: #3e578e; /* Grayish blue for disabled button */
+    cursor: not-allowed;
+  }
+
+  .user-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+  
+  .user-card {
+    flex: 1 1 calc(20% - 1rem); /* Default to 5 cards per row */
+    min-width: 200px;
+    margin: 0.5rem;
+    padding: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    text-align: center;
+  }
+
+  
   @media (prefers-color-scheme: light) {
     :root {
       color: #213547;
@@ -76,4 +339,40 @@
     button {
       background-color: #f9f9f9;
     }
-  } */
+  }
+
+
+  /* For screens larger than 1200px, 5 cards per row */
+@media (min-width: 1200px) {
+  .user-card {
+    flex: 1 1 calc(20% - 1rem);
+  }
+}
+
+/* For screens between 900px and 1199px, 4 cards per row */
+@media (max-width: 1199px) {
+  .user-card {
+    flex: 1 1 calc(25% - 1rem);
+  }
+}
+
+/* For screens between 600px and 899px, 3 cards per row */
+@media (max-width: 899px) {
+  .user-card {
+    flex: 1 1 calc(33.33% - 1rem);
+  }
+}
+
+/* For screens between 400px and 599px, 2 cards per row */
+@media (max-width: 599px) {
+  .user-card {
+    flex: 1 1 calc(50% - 1rem);
+  }
+}
+
+/* For small screens (less than 400px), 1 card per row */
+@media (max-width: 399px) {
+  .user-card {
+    flex: 1 1 100%;
+  }
+}
