@@ -8,6 +8,7 @@ import UserComponent from "./components/UserComponent/UserComponent.jsx";
 import ProtectedRoute from "./components/ProtectedRoutes/ProtectedRoutes.jsx";
 import CommunityPage from "./pages/CommunityPage.jsx";
 import UserProfile from "./pages/UserProfile.jsx";
+import ClubPage from "./pages/ClubPage.jsx";
 
 const router = createBrowserRouter([
     {
@@ -22,6 +23,10 @@ const router = createBrowserRouter([
             {
                 path: "/communities",
                 element: <CommunityPage />,
+            },
+            {
+                path: "/communities/:_id",
+                element: <ClubPage />,
             },
             {
                 path: "/users",

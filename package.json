@@ -7,8 +7,7 @@
         "start": "cd client && npm run dev",
         "build": "cd client && npm install && npm run build",
         "server": "cd server && node server.js",
-        "dev": "concurrently \"cd server && npm run watch\" \"cd client && npm run dev\"",
-        "install": "cd server && npm i && cd ../client && npm i",
+        "dev": "concurrently \"npm run server\" \"cd client && npm run dev\"",
         "seed": "cd server && npm run seed"
     },
     "author": "",
@@ -22,5 +21,8 @@
         "mongoose": "^8.7.0",
         "react": "^18.3.1",
         "vite": "^5.4.8"
+    },
+    "devDependencies": {
+        "nodemon": "^3.1.7"
     }
 }

@@ -49,10 +49,6 @@ const clubSchema = new Schema(
     },
   }
 );
-
-// Index for unique club names
-clubSchema.index({ name: 1 }, { unique: true });
-
 // Virtual to get the number of members in the club
 clubSchema.virtual('memberCount').get(function() {
     return this.members.length;

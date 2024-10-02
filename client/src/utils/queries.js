@@ -1,4 +1,4 @@
-import { gql } from '@apollo/client';
+import { gql } from "@apollo/client";
 
 // Query to get all books in the database
 export const GET_ALL_BOOKS = gql`
@@ -51,18 +51,6 @@ export const GET_ALL_CLUBS = gql`
                 }
                 blob
                 media
-                comments {
-                    _id
-                    title
-                    content
-                    author {
-                        _id
-                        username
-                    }
-                    blob
-                    createdAt
-                    updatedAt
-                }
             }
             memberCount
         }
@@ -71,15 +59,21 @@ export const GET_ALL_CLUBS = gql`
 
 // Query to get one club by its ID in the database
 export const GET_CLUB_BY_ID = gql`
-    query getClub($_id: ID!) {
+    query Club($_id: ID!) {
         club(_id: $_id) {
             _id
             name
             description
             img
-            founder
-            members
-            posts
+            founder {
+                _id
+                username
+            }
+            posts {
+                _id
+                title
+                content
+            }
             memberCount
         }
     }

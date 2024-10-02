@@ -15,7 +15,7 @@ const ClubList = () => {
             {/* Check if data and data.clubs exist before mapping */}
             {data?.clubs?.map((club) => (
                 <li key={club._id}>
-                    <Link to="/community">
+                    <Link to={`/communities/${club._id}`}>
                         <ClubCard club={club} />
                     </Link>
                 </li>

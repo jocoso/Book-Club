@@ -22,19 +22,7 @@ const typeDefs = gql`
         description: String
         image: String
         blob: Int
-        comments: [Comment]
     }
-
-    type Comment {
-        _id: ID!
-        title: String!
-        content: String
-        author: User!
-        bookId: ID!    # This links the comment to a specific book
-        blob: Int
-        createdAt: Date
-        updatedAt: Date
-      }
       
     # Comment Input Type
     input CommentInput {
@@ -78,7 +66,6 @@ const typeDefs = gql`
         author: User!
         blob: Int
         media: [String!]
-        comments: [Comment!]!
         createdAt: Date
         updatedAt: Date
     }
@@ -110,11 +97,6 @@ const typeDefs = gql`
         getBookData(isbn: ID!): Book
         club(_id: ID!): Club 
         clubs: [Club]
-        
-        # Comment Queries
-        comments: [Comment]
-        comment(_id: ID!): Comment
-        commentsByBook(bookId: ID!): [Comment]
 
         # Review Queries
         getAllReviews: [Review]
@@ -187,21 +169,6 @@ const typeDefs = gql`
             inks: Int
         ): Review
         deleteReview(_id: ID!): Boolean
-
-        # Comment Mutations
-        addComment(
-            title: String!
-            content: String
-            author: ID!
-            blob: Int
-        ): Comment
-        updateComment(
-            _id: ID!
-            title: String
-            content: String
-            blob: Int
-        ): Comment
-        deleteComment(_id: ID!): Boolean
 
         # Club Mutations
         addClub(

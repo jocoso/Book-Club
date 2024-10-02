@@ -1,7 +1,7 @@
-const bcrypt = require('bcryptjs');
+const bcrypt = require("bcryptjs");
 const { AuthenticationError } = require("apollo-server-express");
 const { signToken } = require("../utils/auth");
-const { User, Book, Club, Comment, Post, Review } = require("../models");
+const { User, Book, Club, Post, Review } = require("../models");
 
 const resolvers = {
     Query: {
@@ -78,46 +78,16 @@ const resolvers = {
         // Get a single club by ID
         club: async (parent, { _id }) => {
             try {
-                return await Club.findById(_id)
+                const club = await Club.findById(_id)
                     .populate("members")
+                    .populate("founder")
                     .populate("posts");
+                if (!club) throw new Error("Club not found");
+                return club;
             } catch (err) {
                 throw new Error("Failed to fetch club");
             }
         },
-        // Get all comments
-        comments: async () => {
-            try {
-                return await Comment.find().populate({
-                    path: "author",
-                    model: "User",
-                });
-            } catch (err) {
-                throw new Error("Failed to fetch comments");
-            }
-        },
-        // Get a single comment by ID
-        comment: async (parent, { _id }) => {
-            try {
-                return await Comment.findById(_id).populate("author");
-            } catch (err) {
-                throw new Error("Failed to fetch comment");
-            }
-        },
-        // Get comments by book ISBN
-        commentsByBook: async (parent, { isbn }) => {
-            try {
-                const book = await Book.findOne({ isbn });
-                if (!book) {
-                    throw new Error("Book not found");
-                }
-
-                return await Comment.find({ bookId: book._id }).populate("author");
-            } catch (err) {
-                throw new Error("Failed to fetch comments for the book");
-            }
-        },
-        // Get all reviews
         getAllReviews: async () => {
             try {
                 return await Review.find()
@@ -148,13 +118,13 @@ const resolvers = {
                 const user = await User.create({
                     username,
                     email,
-                    password: hashedPassword
+                    password: hashedPassword,
                 });
 
                 const token = signToken(user);
                 return { token, user };
             } catch (err) {
-                throw new Error('Failed to create user');
+                throw new Error("Failed to create user");
             }
         },
         // Login an existing user
@@ -175,7 +145,11 @@ const resolvers = {
             }
         },
         // Update user data
-        updateUser: async (parent, { _id, username, email, password }, context) => {
+        updateUser: async (
+            parent,
+            { _id, username, email, password },
+            context
+        ) => {
             if (!context.user || context.user._id !== _id) {
                 throw new AuthenticationError("Not authorized");
             }
@@ -204,7 +178,10 @@ const resolvers = {
             }
         },
         // Add a new book
-        addBook: async (parent, { _id, blob, title, author, description, image }) => {
+        addBook: async (
+            parent,
+            { _id, blob, title, author, description, image }
+        ) => {
             try {
                 const bookExists = await Book.findOne({ _id });
                 if (bookExists) {
@@ -223,7 +200,10 @@ const resolvers = {
             }
         },
         // Update a book's data
-        updateBook: async (parent, { isbn, blob, title, author, description, image }) => {
+        updateBook: async (
+            parent,
+            { isbn, blob, title, author, description, image }
+        ) => {
             try {
                 return await Book.findByIdAndUpdate(
                     isbn,
@@ -243,7 +223,10 @@ const resolvers = {
             }
         },
         // Add a new review to a book
-        addReview: async (parent, { bookId, reviewText, rating, user, title, content, inks }) => {
+        addReview: async (
+            parent,
+            { bookId, reviewText, rating, user, title, content, inks }
+        ) => {
             try {
                 const book = await Book.findById(bookId);
                 if (!book) {
@@ -272,51 +255,6 @@ const resolvers = {
                 return newReview;
             } catch (err) {
                 throw new Error("Failed to add review");
-            }
-        },
-        // Add a new comment to a post or book
-        addComment: async (parent, { title, content, author, isbn, blob }) => {
-            try {
-                const book = await Book.findOne({ isbn });
-                if (!book) {
-                    throw new Error("Book not found");
-                }
-
-                const comment = await Comment.create({
-                    title,
-                    content,
-                    author,
-                    bookId: book._id,  // Associate comment with the book
-                    blob,
-                });
-
-                await Book.findByIdAndUpdate(book._id, {
-                    $push: { comments: comment._id },
-                });
-
-                return comment;
-            } catch (err) {
-                throw new Error("Failed to add comment");
-            }
-        },
-        // Update a comment by ID
-        updateComment: async (parent, { _id, title, content, blob }) => {
-            try {
-                return await Comment.findByIdAndUpdate(
-                    _id,
-                    { title, content, blob },
-                    { new: true }
-                );
-            } catch (err) {
-                throw new Error("Failed to update comment");
-            }
-        },
-        // Delete a comment by ID
-        deleteComment: async (parent, { _id }) => {
-            try {
-                return await Comment.findByIdAndDelete(_id);
-            } catch (err) {
-                throw new Error("Failed to delete comment");
             }
         },
     },
