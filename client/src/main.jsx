@@ -2,10 +2,11 @@ import ReactDOM from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 import App from "./App.jsx";
-import Home from "./pages/HomePage";
+import Home from "./pages/HomePage.jsx";
 import Error from "./pages/ErrorPage";
-import UserList from "./components/UserComponent/UserComponent.jsx";
-
+import UserComponent from "./components/UserComponent/UserComponent.jsx";
+import ProtectedRoute from "./components/ProtectedRoutes/ProtectedRoutes.jsx";
+import UserProfile from "./pages/UserProfile.jsx";
 
 const router = createBrowserRouter([
     {
@@ -18,9 +19,27 @@ const router = createBrowserRouter([
                 element: <Home />,
             },
             {
-                path: '/users',
-                element: <UserList />
-            }
+                path: "/users",
+                element: <UserComponent />,
+            },
+            {
+                path: "users",
+                element: (
+                    <ProtectedRoute>
+                        {/* Protect this route */}
+                        <UserComponent />
+                    </ProtectedRoute>
+                ),
+            },
+            {
+                path: "users/:userId",
+                element: (
+                    <ProtectedRoute>
+                        {/* Protect this route */}
+                        <UserProfile />
+                    </ProtectedRoute>
+                ),
+            },
         ],
     },
 ]);

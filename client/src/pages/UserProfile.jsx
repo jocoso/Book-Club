@@ -1,5 +1,5 @@
 import { useQuery } from "@apollo/client";
-import { GET_USER_BY_ID } from "../utils/queries/userQueries";
+import { GET_USER_BY_ID } from "../utils/queries";
 import { useParams } from "react-router-dom";
 
 const UserProfile = () => {

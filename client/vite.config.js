@@ -15,7 +15,7 @@ export default defineConfig({
         // Without this line, API calls would attempt to query for data from the current domain: localhost:3000
         proxy: {
             "/graphql": {
-                target: `${process.env.VITE_API_URL}/graphql` || "http://localhost:3001",
+                target: `${process.env.VITE_API_URL}/graphql` || "http://localhost:3001/graphql",
                 changeOrigin: true,
                 secure: false,
             },
