@@ -1,6 +1,6 @@
 import { useQuery, useMutation } from "@apollo/client";
-import { GET_ALL_USERS } from "../../utils/queries/userQueries";
-import { ADD_FRIEND } from "../../utils/mutations/userMutations";
+import { GET_ALL_USERS } from "../../utils/queries.js";
+import { ADD_FRIEND } from "../../utils/mutations.js";
 
 const UserComponent = () => {
     // State to store query results

@@ -1,7 +1,9 @@
 const { Schema, model } = require('mongoose');
+const commentSchema = require('./Comment');
 
 const bookSchema = new Schema(
   {
+    comments: [commentSchema],
     isbn: {
       type: String, 
       required: true, // Corrected the typo here
