@@ -19,7 +19,7 @@ function App() {
     <ApolloProvider client={client}>
       <div className="min-w-full min-h-full">
         <Header />
-        <div className="container">
+        <div className="min-w-full min-h-full flex flex-col">
           <Outlet />
         </div>
         <Footer />
