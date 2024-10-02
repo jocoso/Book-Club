@@ -17,7 +17,7 @@ function App() {
   return (
     // Important for API Consumption: Wrap your component tree with the ApolloProvider component to enable access to the ApolloClient from anywhere within the application
     <ApolloProvider client={client}>
-      <div className="flex-column justify-flex-start min-100-vh">
+      <div className="min-w-full min-h-full">
         <Header />
         <div className="container">
           <Outlet />
