@@ -1,9 +1,18 @@
-import Navigation from "../Navigation/Navigation.jsx";
+import { useContext } from 'react';
+import { AuthContext } from '../../contexts/AuthContexts';
 
 const Header = () => {
-    return (<div>
-        <Navigation />
-    </div>)
-}
+  const { user, logout } = useContext(AuthContext);
+
+  return (
+    <header>
+      {user ? (
+        <button onClick={logout}>Logout</button>
+      ) : (
+        <a href="/login">Login</a>
+      )}
+    </header>
+  );
+};
 
 export default Header;

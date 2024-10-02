@@ -58,3 +58,13 @@
 
 
 
+module.exports = {
+    // Other webpack config here (e.g., entry, output, etc.)
+    devServer: {
+      setupMiddlewares: (middlewares, devServer) => {
+        // Your custom middleware setup here
+        return middlewares;
+      },
+    },
+  };
+  
