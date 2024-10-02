@@ -1,5 +1,6 @@
 const express = require("express");
 // Import the ApolloServer class
+
 const { ApolloServer } = require("@apollo/server");
 const { expressMiddleware } = require("@apollo/server/express4");
 
@@ -18,6 +19,7 @@ const app = express();
 // Create a new instance of an Apollo server with the GraphQL schema
 const startApolloServer = async () => {
     await server.start();
+    app.use(cors())
 
     app.use(express.urlencoded({ extended: false }));
     app.use(express.json());
