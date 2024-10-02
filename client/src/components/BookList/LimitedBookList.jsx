@@ -1,4 +1,4 @@
-import { useQuery, gql } from "@apollo/client";
+import { useQuery } from "@apollo/client";
 import { Link } from "react-router-dom";
 import BookCard from "../BookCard/BookCard";
 import { GET_X_BOOKS } from "../../utils/queries";

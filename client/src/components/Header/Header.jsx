@@ -1,4 +1,4 @@
-import Navigator from "happy-dom/lib/navigator/Navigator.js";
+import Navigator from "../Navigation/Navigation";
 
 const Header = () => {
     return (<div>
