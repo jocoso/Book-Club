@@ -13,7 +13,8 @@ import UserProfile from "./pages/UserProfile.jsx";
 import ClubPage from "./pages/ClubPage.jsx";
 import BookPage from "./pages/BookPage.jsx";
 import DiscussionPage from "./pages/DiscussionPage.jsx";
-import CreatePostPage from "./pages/CreatePostPage.jsx"
+import CreatePostPage from "./pages/CreatePostPage.jsx";
+import Review from "./pages/Review.jsx"; // Import your new Review page
 
 const router = createBrowserRouter([
     {
@@ -66,6 +67,10 @@ const router = createBrowserRouter([
                         <UserProfile />
                     </ProtectedRoute>
                 ),
+            },
+            {
+                path: "/review", // Add the route for the Review page
+                element: <Review />, // Specify the Review component here
             },
         ],
     },
