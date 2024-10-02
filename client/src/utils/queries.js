@@ -14,6 +14,8 @@ export const GET_ALL_BOOKS = gql`
     }
 `;
 
+
+
 // Query to get a limited number of books
 export const GET_X_BOOKS = gql`
     query Books($limit: Int) {

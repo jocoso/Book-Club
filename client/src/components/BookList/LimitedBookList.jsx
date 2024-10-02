@@ -18,7 +18,7 @@ const LimitedBookList = () => {
             <ul>
                 {data.books.map((book) => (
                     <li key={book._id}>
-                        <Link to="/community">
+                        <Link to={`/books/${book.isbn}`}>
                             <BookCard book={book} />
                         </Link>
                     </li>

@@ -5,9 +5,9 @@ import { Link } from "react-router-dom";
 import { GET_CLUB_BY_ID } from "../utils/queries";
 
 const ClubPage = () => {
-    const { id } = useParams();
+    const { _id } = useParams();
     const { loading, error, data } = useQuery(GET_CLUB_BY_ID, {
-        variables: { _id: id },
+        variables: { _id },
     });
 
     if (loading) return <div>Loading...</div>; // Show loading state
@@ -18,8 +18,19 @@ const ClubPage = () => {
     return (
         <div>
             <Link to="/communities">Back</Link>
-            <h1>Club {id}</h1>
-            <p>These are some of our communities</p>
+            <h1>{club.name}</h1>
+            <p>{club.description}</p>
+            <p>Created by: {club.founder.username}</p>
+            {club.posts&&club.posts.map((post) => {
+                return(<li key={post._id}>
+                    {post.title}
+                    {post.content}
+                </li>);
+            })}
+            <p>Members: {club.memberCount}</p>
+            <button>
+                Create a Post
+            </button>
         </div>
     );
 };

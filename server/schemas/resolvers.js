@@ -64,6 +64,7 @@ const resolvers = {
                 throw new Error("Failed to fetch book by ISBN");
             }
         },
+        
         // Get all clubs
         clubs: async () => {
             try {
