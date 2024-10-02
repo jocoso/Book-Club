@@ -1,4 +1,4 @@
-import { gql } from "graphql-tag";
+import { gql } from '@apollo/client';
 
 // Query to get all books in the database
 export const GET_ALL_BOOKS = gql`

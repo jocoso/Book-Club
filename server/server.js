@@ -1,5 +1,6 @@
 const express = require("express");
 // Import the ApolloServer class
+const cors = require('cors');
 
 const { ApolloServer } = require("@apollo/server");
 const { expressMiddleware } = require("@apollo/server/express4");
