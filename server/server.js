@@ -9,6 +9,8 @@ const { connection } = require("./config/connection");
 const { authMiddleware } = require("./utils/auth");
 const cors = require('cors');
 const Librarian = require('./utils/librarian');
+const authRoutes = require('./routes/authRoutes');  // Correct path to the new authRoutes.js
+// Import your auth routes here
 
 const PORT = process.env.PORT || 3001;
 const app = express();
@@ -42,6 +44,12 @@ const configureExpress = (app) => {
     app.use(express.json());
     app.use(express.urlencoded({ extended: true }));
 
+
+    console.log('authRoutes:', authRoutes);
+    // Use the auth routes for signup and login
+    app.use('/api', authRoutes);  // Now the routes will be mounted correctly
+ // Add this line to use your login and signup routes
+
     // REST API Route for fetching book data
     app.get('/api/bookdata/:endpoint', async (req, res) => {
         try {
@@ -63,7 +71,6 @@ const configureExpress = (app) => {
     }
 };
 
-// Start Apollo Server and Express App
 // Start Apollo Server and Express App
 const startServer = async () => {
     configureExpress(app);
