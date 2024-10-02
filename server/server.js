@@ -56,7 +56,7 @@ const startServer = async () => {
             },
             credentials: true,
             introspection: true, // Enable introspection for Apollo Studio
-            playground: true,
+            playground: false,
         });
 
         await server.start();
