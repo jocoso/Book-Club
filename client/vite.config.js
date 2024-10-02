@@ -10,6 +10,7 @@ export default defineConfig({
     server: {
         port: process.env.PORT || 3000,
         open: true,
+        host: true,
         // Important for MERN Setup: Here we're establishing a relationship between our two development servers.
         // We are pointing our Vite client-side development server to proxy API requests to our server-side Node server at port 3001.
         // Without this line, API calls would attempt to query for data from the current domain: localhost:3000
