@@ -39,7 +39,7 @@ const Navigation = () => {
                         <Link to="/communities">Communities</Link>
                     </li>
                     <li className="hover:text-yellow-400">
-                        <Link to="/discussions/clubId">Discussions</Link>
+                        <Link to="/discussions">Discussions</Link>
                     </li>
                     <li className="hover:text-yellow-400">
                         <Link to="/reviews/bookId">Reviews</Link>
