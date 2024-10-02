@@ -55,7 +55,7 @@ const startApolloServer = async () => {
     app.use("/graphql", expressMiddleware(server));
 
     db.once("open", () => {
-        app.listen(PORT, host: '0.0.0.0', (url) => {
+        app.listen({port: PORT, host: '0.0.0.0'}, (url) => {
             console.log(`🚀 Server ready at ${url}`);
         });
     });
