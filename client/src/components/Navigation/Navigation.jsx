@@ -1,36 +1,43 @@
-import { Link } from "react-router-dom";
-
-// Assuming UserContext is already created and provided higher up in the app
-
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { useQuery } from '@apollo/client';
+import { GET_ME } from '../../utils/queries/queries';
 
 const Navigation = () => {
-    // Access the UserContext
+  const { data: user, refetch } = useQuery(GET_ME, { fetchPolicy: 'network-only' });
 
+  const handleLogout = () => {
+    localStorage.removeItem('id_token');
+    localStorage.removeItem('user_id');
+    refetch();
+    window.location.href = '/login';
+  };
 
-    // Function to handle logout
-
-
-    return (
-        <nav>
-            <ul>
-                <li>
-                    <Link to="/">Home</Link>
-                </li>
-                <li>
-                    <Link to="/book-clubs">Book Clubs</Link>
-                </li>
-                <li>
-                    <Link to="/discussions/clubId">Discussions</Link>
-                </li>
-                <li>
-                    <Link to="/reviews/bookId">Reviews</Link>
-                </li>
-                <li>
-                    <Link to="/user-profile">Profile</Link>
-                </li>
-            </ul>
-        </nav>
-    );
+  return (
+    <nav>
+      <ul>
+        <li><Link to="/">Home</Link></li>
+        <li><Link to="/book-clubs">Book Clubs</Link></li>
+        <li><Link to="/discussions/clubId">Discussions</Link></li>
+        <li><Link to="/reviews/bookId">Reviews</Link></li>
+        {user ? (
+          <>
+            <li><Link to="/profile">Profile</Link></li>
+            <li>
+              <Link to="/user-settings">Settings</Link>
+              <button onClick={handleLogout}>Logout</button>
+            </li>
+          </>
+        ) : (
+          <>
+            <li><Link to="/login">Login</Link></li>
+            <li><Link to="/signup">Signup</Link></li>
+          </>
+        )}
+      </ul>
+    </nav>
+  );
 };
 
 export default Navigation;
+

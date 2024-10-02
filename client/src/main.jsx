@@ -7,6 +7,8 @@ import Error from "./pages/ErrorPage";
 import UserComponent from "./components/UserComponent/UserComponent.jsx";
 import ProtectedRoute from "./components/ProtectedRoutes/ProtectedRoutes.jsx";
 import UserProfile from "./pages/UserProfile.jsx";
+import LoginPage from './pages/LoginPage.jsx';  // Import the new LoginPage component
+import ProfilePage from './pages/ProfilePage.jsx';  // Import the new ProfilePage component
 
 const router = createBrowserRouter([
     {
@@ -19,6 +21,18 @@ const router = createBrowserRouter([
                 element: <Home />,
             },
             {
+                path: "/login",
+                element: <LoginPage />,  // Add the login route
+            },
+            {
+                path: "/profile",
+                element: (
+                    <ProtectedRoute>
+                        <ProfilePage />  // Add the profile route inside ProtectedRoute
+                    </ProtectedRoute>
+                ),
+            },
+            {
                 path: "/users",
                 element: <UserComponent />,
             },
@@ -26,7 +40,6 @@ const router = createBrowserRouter([
                 path: "users",
                 element: (
                     <ProtectedRoute>
-                        {/* Protect this route */}
                         <UserComponent />
                     </ProtectedRoute>
                 ),
@@ -35,7 +48,6 @@ const router = createBrowserRouter([
                 path: "users/:userId",
                 element: (
                     <ProtectedRoute>
-                        {/* Protect this route */}
                         <UserProfile />
                     </ProtectedRoute>
                 ),
