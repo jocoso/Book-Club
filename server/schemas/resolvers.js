@@ -130,34 +130,51 @@ const resolvers = {
     Mutation: {
         // Create a new user
         addUser: async (parent, { username, email, password }) => {
-            try {
-                console.log("Hashing password for:", email); // Debug line
-      
+      try {
+        // Log that the request was received
+        console.log('Received user creation request:', { username, email });
+
+        // Check if a user with the same email already exists
+        const existingUser = await User.findOne({ email });
+        if (existingUser) {
+          console.log('User with this email already exists');
+          throw new Error('Email already exists'); // Throw an error if email is already in use
+        }
+
+        // Log before hashing the password
+        console.log('Hashing password for user:', username);
+
         // Hash the password
         const hashedPassword = await bcrypt.hash(password, 10);
-      
-        console.log("Password hashed successfully:", hashedPassword); // Debug line
-      
+        console.log('Password hashed successfully:', hashedPassword);
+
         // Create the new user with the hashed password
-        const user = await User.create({
-           username,
-           email,
-           password: hashedPassword
+        const newUser = await User.create({
+          username,
+          email,
+          password: hashedPassword,
         });
 
-        console.log("User created successfully:", user); // Debug line
+        console.log('User created successfully:', newUser);
 
-        // Generate a token
-        const token = signToken(user);
+          // Generate a token for the newly created user
+          const token = signToken(newUser);
+          console.log('Token generated:', token);
 
-        return { token, user };
-        } catch (err) {
-          console.error("Error in addUser resolver:", err); // More detailed error
-          throw new Error('Failed to create user');
-        }
-        },  
+          // Return the token and the new user object
+            return { token, user: newUser };
+
+        }    catch (err) {
+            // Log the full error details
+           console.error('Error occurred while creating user:', err);
+
+            // Throw an ApolloError with a user-friendly message
+            throw new ApolloError('Failed to create user');
+         }
+        },
         // Login an existing user
         login: async (parent, { email, password }) => {
+            console.log('Login attempt with:', email, password); 
             try {
                 const user = await User.findOne({ email });
                 if (!user) {
@@ -174,27 +191,22 @@ const resolvers = {
             }
         },
         // Update user data
-        updateUser: async (
-            parent,
-            { _id, username, email, password },
-            context
-        ) => {
+        updateUser: async (parent, { _id, username, email, password }, context) => {
             if (!context.user || context.user._id !== _id) {
-                throw new AuthenticationError("Not authorized");
+              throw new AuthenticationError('Not authorized');
             }
+      
             try {
-                const updateFields = {};
-                if (username) updateFields.username = username;
-                if (email) updateFields.email = email;
-                if (password) updateFields.password = password;
-
-                return await User.findByIdAndUpdate(_id, updateFields, {
-                    new: true,
-                });
+              const updateFields = {};
+              if (username) updateFields.username = username;
+              if (email) updateFields.email = email;
+              if (password) updateFields.password = password;
+      
+              return await User.findByIdAndUpdate(_id, updateFields, { new: true });
             } catch (err) {
-                throw new Error("Failed to update user");
+              throw new Error('Failed to update user');
             }
-        },
+          },
         // Delete a user by ID
         deleteUser: async (parent, { _id }, context) => {
             if (!context.user || context.user._id !== _id) {

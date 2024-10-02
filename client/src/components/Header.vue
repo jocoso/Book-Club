@@ -1,11 +1,26 @@
 <template>
     <div>
-        <h1>Header</h1>
+      <div v-if="authStore.isLoggedIn">Welcome! <button @click="logout">Logout</button></div>
+      <div v-else><router-link to="/login">Login</router-link></div>
     </div>
-</template>
-
-<script>
-export default {
-    name: 'Header',
-};
-</script>
+  </template>
+  
+  <script>
+  import { inject } from 'vue';
+  
+  export default {
+    setup() {
+      const authStore = inject('authStore');
+  
+      const logout = () => {
+        authStore.logout();
+      };
+  
+      return {
+        authStore,
+        logout,
+      };
+    },
+  };
+  </script>
+  

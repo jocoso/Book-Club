@@ -56,14 +56,16 @@ export default {
         <p>Email: {{ data.me.email }}</p>
         <h3>Friends:</h3>
         <ul>
-          <li v-for="friend in data.me.friends" :key="friend._id">{{ friend.username }}</li>
+          <li v-for="friend in data.me.friends" :key="friend._id">
+            {{ friend.username }}
+          </li>
         </ul>
       </div>
     </div>
   </template>
   
   <script>
-  import { useQuery } from '@vue/apollo-composable';
+  import { useQuery } from '@vue/apollo-composable'; 
   import { GET_ME } from '@/utils/queries/userQueries';
   
   export default {
@@ -76,7 +78,8 @@ export default {
         error,
         data: result,
       };
-    }
+    },
   };
   </script>
+  
   

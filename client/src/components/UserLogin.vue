@@ -1,16 +1,8 @@
 <template>
     <div>
       <form @submit.prevent="handleLogin">
-        <input
-          type="email"
-          v-model="email"
-          placeholder="Email"
-        />
-        <input
-          type="password"
-          v-model="password"
-          placeholder="Password"
-        />
+        <input type="email" v-model="email" placeholder="Email" required />
+        <input type="password" v-model="password" placeholder="Password" required />
         <button type="submit">Login</button>
       </form>
       <div v-if="errorMessage">{{ errorMessage }}</div>
@@ -18,47 +10,41 @@
   </template>
   
   <script>
-  import { ref } from 'vue'; // Ensure ref is imported
+  import { ref, inject } from 'vue';
+  import { useRouter } from 'vue-router';
+  import { useMutation } from '@vue/apollo-composable';
+  import { LOGIN_USER } from '@/utils/mutations/userMutations';  // Adjust path accordingly
   
   export default {
-    name: 'UserLogin',
     setup() {
-      const email = ref(''); // Use ref to create a reactive reference
+      const authStore = inject('authStore');  // Inject the auth store
+      const email = ref('');
       const password = ref('');
       const errorMessage = ref('');
+      const router = useRouter();
+  
+      const { mutate: login } = useMutation(LOGIN_USER);
   
       const handleLogin = async () => {
         try {
-          // Simulate an API call to login
           if (!email.value || !password.value) {
             throw new Error('Please enter both email and password');
           }
   
-          // Normally, here you would make an actual API call
-          const token = await fakeApiLogin(email.value, password.value);
-          
-          if (token) {
-            localStorage.setItem('id_token', token); // Save the token to local storage
-            console.log('Login successful');
-          } else {
-            throw new Error('Invalid credentials');
-          }
+          const { data } = await login({
+            variables: {
+              email: email.value,
+              password: password.value,
+            },
+          });
+  
+          // Use the authStore to set the token globally
+          authStore.setLogin(data.login.token);
+  
+          router.push('/');
         } catch (error) {
           errorMessage.value = error.message;
         }
-      };
-  
-      // Simulated API call
-      const fakeApiLogin = async (email, password) => {
-        return new Promise((resolve, reject) => {
-          setTimeout(() => {
-            if (email === 'test@example.com' && password === 'password') {
-              resolve('fake-jwt-token');
-            } else {
-              reject(new Error('Invalid credentials'));
-            }
-          }, 1000);
-        });
       };
   
       return {
@@ -70,4 +56,9 @@
     },
   };
   </script>
+  
+  
+  
+  
+  
   
