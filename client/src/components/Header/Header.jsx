@@ -1,4 +1,4 @@
-import Navigator from "../Navigation/Navigation";
+import Navigator from "../Navigation/Navigation.jsx";
 
 const Header = () => {
     return (<div>
