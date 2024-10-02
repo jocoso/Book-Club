@@ -10,7 +10,6 @@ const typeDefs = gql`
         email: String!
         booksRead: [Book]
         friends: [User]
-
     }
 
     # Book Type
@@ -23,7 +22,7 @@ const typeDefs = gql`
         image: String
         blob: Int
     }
-      
+
     # Comment Input Type
     input CommentInput {
         title: String!
@@ -57,17 +56,16 @@ const typeDefs = gql`
         memberCount: Int
     }
 
-    # Post Type
     type Post {
-        _id: ID!
-        title: String!
-        content: String!
-        club: Club!
-        author: User!
+        _id: ID
+        title: String
+        content: String
+        club: Club # This will refer to the "parentClub" field in MongoDB
+        author: User
         blob: Int
-        media: [String!]
-        createdAt: Date
-        updatedAt: Date
+        media: [String]
+        createdAt: String
+        updatedAt: String
     }
 
     # Post Input Type
@@ -95,8 +93,9 @@ const typeDefs = gql`
         books(limit: Int): [Book]
         book(_id: ID!): Book
         getBookData(isbn: String!): Book
-        club(_id: ID!): Club 
+        club(_id: ID!): Club
         clubs: [Club]
+        getAllPostsOfAClub(clubId: ID!): [Post]
 
         # Review Queries
         getAllReviews: [Review]
@@ -105,8 +104,6 @@ const typeDefs = gql`
         # User's wishcart (for books)
         getUserWishcart(user_Id: ID!): [Book]
     }
-
-
 
     # Mutation Type Definitions
     type Mutation {
@@ -189,7 +186,7 @@ const typeDefs = gql`
         addPost(
             title: String!
             content: String!
-            club: ID!
+            club: ID! 
             author: ID!
             media: [String!]
             blob: Int

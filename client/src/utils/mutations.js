@@ -1,4 +1,4 @@
-import { gql } from '@apollo/client';
+import { gql } from "@apollo/client";
 
 // Adds a club
 export const ADD_CLUB = gql`
@@ -28,20 +28,12 @@ export const ADD_CLUB = gql`
 
 // Update clubs
 export const UPDATE_CLUB = gql`
-    mutation UpdateClub(
-        $name: String
-        $description: String
-        $img: String
-    ) {
-        updateClub(
-            name: $name
-            description: $description
-            img: $img
-        ) {
+    mutation UpdateClub($name: String, $description: String, $img: String) {
+        updateClub(name: $name, description: $description, img: $img) {
             _id
             name
             description
-            img    
+            img
         }
     }
 `;
@@ -128,6 +120,40 @@ export const UPDATE_PASSWORD = gql`
             _id
             username
             email
+        }
+    }
+`;
+
+export const ADD_POST = gql`
+    mutation AddPost(
+        $title: String!
+        $content: String!
+        $club: ID!
+        $author: ID!
+        $media: [String!]
+        $blob: Int
+    ) {
+        addPost(
+            title: $title
+            content: $content
+            club: $club
+            author: $author
+            media: $media
+            blob: $blob
+        ) {
+            _id
+            title
+            content
+            club {
+                _id
+                name
+            }
+            author {
+                _id
+                username
+            }
+            media
+            blob
         }
     }
 `;

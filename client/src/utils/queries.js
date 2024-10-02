@@ -14,7 +14,22 @@ export const GET_ALL_BOOKS = gql`
     }
 `;
 
-
+export const GET_ALL_POSTS_OF_A_CLUB = gql`
+    query getAllPostsOfAClub($clubId: ID!) {
+        getAllPostsOfAClub(clubId: $clubId) {
+            _id
+            title
+            content
+            blob
+            media
+            createdAt
+            author {
+                _id
+                username
+            }
+        }
+    }
+`;
 
 // Query to get a limited number of books
 export const GET_X_BOOKS = gql`

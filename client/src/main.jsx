@@ -13,6 +13,7 @@ import UserProfile from "./pages/UserProfile.jsx";
 import ClubPage from "./pages/ClubPage.jsx";
 import BookPage from "./pages/BookPage.jsx";
 import DiscussionPage from "./pages/DiscussionPage.jsx";
+import CreatePostPage from "./pages/CreatePostPage.jsx"
 
 const router = createBrowserRouter([
     {
@@ -35,6 +36,10 @@ const router = createBrowserRouter([
             {
                 path: "/discussions",
                 element: <DiscussionPage />
+            },
+            {
+                path: "/communities/:_id/create-post",
+                element: <CreatePostPage />
             },
             {
                 path: "/books/:isbn",

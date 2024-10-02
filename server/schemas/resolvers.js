@@ -64,14 +64,21 @@ const resolvers = {
                 throw new Error("Failed to fetch book by ISBN");
             }
         },
-        
+
         // Get all clubs
         clubs: async () => {
             try {
                 return await Club.find()
                     .populate("founder")
                     .populate("members")
-                    .populate("posts");
+                    .populate({
+                        path: "posts",
+                        populate: {
+                            path: "author",
+                            select: "username",
+                            match: { username: { $exists: true, $ne: null } }, // Ensure only valid users with a username are populated
+                        },
+                    });
             } catch (err) {
                 throw new Error("Failed to fetch clubs");
             }
@@ -110,8 +117,65 @@ const resolvers = {
                 throw new Error("Failed to fetch user's wishcart");
             }
         },
+        getAllPostsOfAClub: async (_, { clubId }) => {
+            try {
+                const posts = await Post.find({ parentClub: clubId })
+                    .populate("author", "username") // Populate author with just username
+                    .populate("parentClub", "name"); // Optionally populate the club name
+                return posts;
+            } catch (err) {
+                console.error(err);
+                throw new Error("Failed to retrieve posts for the club");
+            }
+        },
     },
     Mutation: {
+        addPost: async (_, { title, content, club, author, media, blob }) => {
+            try {
+                // Validate the club and author
+                const existingClub = await Club.findById(club);
+                if (!existingClub) {
+                    throw new Error("Club not found");
+                }
+
+                const existingUser = await User.findById(author);
+                if (!existingUser) {
+                    throw new Error("User not found");
+                }
+
+                // Create a new post
+                const newPost = await Post.create({
+                    title,
+                    content,
+                    parentClub: club, // Use parentClub in the Post model
+                    author,
+                    media,
+                    blob,
+                });
+
+                // Add the post to the club's posts array
+                existingClub.posts.push(newPost._id);
+                await existingClub.save();
+
+                // Optionally add the post to the author's posts array
+                if (existingUser.posts) {
+                    existingUser.posts.push(newPost._id);
+                    await existingUser.save();
+                }
+
+                // Find the new post by its ID and populate the author and club fields
+                const populatedPost = await Post.findById(newPost._id)
+                    .populate("parentClub")
+                    .populate("author");
+
+                // Return the populated post
+                return populatedPost;
+            } catch (err) {
+                console.error(err);
+                throw new Error("Failed to create post");
+            }
+        },
+
         // Create a new user
         addUser: async (parent, { username, email, password }) => {
             try {
