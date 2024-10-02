@@ -1,20 +1,22 @@
 import { defineConfig } from "vite";
-import vue from "@vitejs/plugin-vue";
-import path from "path";
+import react from "@vitejs/plugin-react";
+import dotenv from "dotenv";
 
+dotenv.config();
+
+// https://vitejs.dev/config/
 export default defineConfig({
-    plugins: [vue()],
-    resolve: {
-        alias: {
-            "@": path.resolve(__dirname, "./src"),
-        },
-    },
+    plugins: [react()],
     server: {
-        host: "0.0.0.0",
-        port: process.env.PORT || 3000, // Port fallback
+        port: process.env.PORT || 3000,
+        open: true,
+        host: true,
+        // Important for MERN Setup: Here we're establishing a relationship between our two development servers.
+        // We are pointing our Vite client-side development server to proxy API requests to our server-side Node server at port 3001.
+        // Without this line, API calls would attempt to query for data from the current domain: localhost:3000
         proxy: {
             "/graphql": {
-                target: import.meta.env.VITE_API_URL || "http://localhost:3001", // Use VITE prefixed environment variables
+                target: process.env.VITE_API_URL || "http://localhost:3001/graphql",
                 changeOrigin: true,
                 secure: false,
             },

@@ -10,7 +10,7 @@ const postSchema = new Schema(
             type: String,
             required: true,
         },
-        parentClub: {
+        parentClub: { // renamed from "club" to "parentClub" for consistency in the DB
             type: Schema.Types.ObjectId,
             ref: 'Club',
             required: true,
@@ -35,12 +35,6 @@ const postSchema = new Schema(
                 },
             },
         ],
-        comments: [
-            {
-                type: Schema.Types.ObjectId,
-                ref: 'Comment',
-            }
-        ],
     },
     {
         toJSON: {
@@ -49,11 +43,6 @@ const postSchema = new Schema(
         timestamps: true, // Automatically adds createdAt and updatedAt fields
     }
 );
-
-// Add virtual for comment count
-postSchema.virtual('commentCount').get(function () {
-    return this.comments.length;
-});
 
 const Post = model('Post', postSchema);
 

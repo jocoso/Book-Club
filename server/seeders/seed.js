@@ -1,32 +1,24 @@
 
-13
-const { connectDB, connection } = require('../config/connection'); // Import the connectDB and connection
-const bookSeeds = require("./bookSeeds.json");
+const connectDB = require('../config/connection'); // Import the connectDB and connection
 const reviewSeeds = require("./reviewSeeds.json");
 const userSeeds = require("./userSeeds.json");
 const clubSeeds = require("./clubSeeds.json");
 const postSeeds = require("./postSeeds.json");
-const commentSeeds = require("./commentSeeds.json");
-const { Book, Club, Comment, Post, User, Review } = require("../models");
+const { Club, Post, User, Review } = require("../models");
 const cleanDB = require("./cleanDB");
 
 const seeders = [
-  { name: "book", schema: Book, seed: bookSeeds },
   { name: "user", schema: User, seed: userSeeds },
   { name: "review", schema: Review, seed: reviewSeeds },
   { name: "club", schema: Club, seed: clubSeeds },
   { name: "post", schema: Post, seed: postSeeds },
-  { name: "comment", schema: Comment, seed: commentSeeds },
 ];
 
 // Seed the database
 const seedDatabase = async () => {
     try {
-      // Connect to MongoDB
-      await connectDB();
-  
       // Wait until the connection is open before proceeding
-      connection.once('open', async () => {
+      connectDB.once('open', async () => {
         try {
           // Clean and seed all collections
           for (const seed of seeders) {

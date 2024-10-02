@@ -23,17 +23,6 @@ const typeDefs = gql`
         blob: Int
     }
 
-    # Comment Type
-    type Comment {
-        _id: ID!
-        title: String!
-        content: String
-        author: User!
-        blob: Int
-        createdAt: Date
-        updatedAt: Date
-    }
-
     # Comment Input Type
     input CommentInput {
         title: String!
@@ -67,18 +56,16 @@ const typeDefs = gql`
         memberCount: Int
     }
 
-    # Post Type
     type Post {
-        _id: ID!
-        title: String!
-        content: String!
-        club: Club!
-        author: User!
+        _id: ID
+        title: String
+        content: String
+        club: Club # This will refer to the "parentClub" field in MongoDB
+        author: User
         blob: Int
-        media: [String!]
-        comments: [Comment!]!
-        createdAt: Date
-        updatedAt: Date
+        media: [String]
+        createdAt: String
+        updatedAt: String
     }
 
     # Post Input Type
@@ -105,12 +92,10 @@ const typeDefs = gql`
         getUser(email: String!): User
         books(limit: Int): [Book]
         book(_id: ID!): Book
-        getBookData(isbn: ID!): Book
-        club(_id: ID!): Club # <-- Add this line
+        getBookData(isbn: String!): Book
+        club(_id: ID!): Club
         clubs: [Club]
-        comments: [Comment]
-        comment(_id: ID!): Comment
-        commentsByBook(bookId: ID!): [Comment]
+        getAllPostsOfAClub(clubId: ID!): [Post]
 
         # Review Queries
         getAllReviews: [Review]
@@ -122,6 +107,7 @@ const typeDefs = gql`
 
     # Mutation Type Definitions
     type Mutation {
+        # User Mutations
         addUser(username: String!, email: String!, password: String!): Auth
         login(email: String!, password: String!): Auth
         updateUser(
@@ -181,21 +167,6 @@ const typeDefs = gql`
         ): Review
         deleteReview(_id: ID!): Boolean
 
-        # Comment Mutations
-        addComment(
-            title: String!
-            content: String
-            author: ID!
-            blob: Int
-        ): Comment
-        updateComment(
-            _id: ID!
-            title: String
-            content: String
-            blob: Int
-        ): Comment
-        deleteComment(_id: ID!): Boolean
-
         # Club Mutations
         addClub(
             name: String!
@@ -215,7 +186,7 @@ const typeDefs = gql`
         addPost(
             title: String!
             content: String!
-            club: ID!
+            club: ID! 
             author: ID!
             media: [String!]
             blob: Int

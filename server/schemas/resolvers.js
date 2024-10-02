@@ -1,7 +1,7 @@
-const bcrypt = require('bcryptjs');
-const { AuthenticationError } = require("apollo-server-express"); // Use proper package for error handling
+const bcrypt = require("bcryptjs");
+const { AuthenticationError } = require("apollo-server-express");
 const { signToken } = require("../utils/auth");
-const { User, Book, Club, Comment, Post, Review } = require("../models");
+const { User, Book, Club, Post, Review } = require("../models");
 
 const resolvers = {
     Query: {
@@ -49,7 +49,7 @@ const resolvers = {
             }
         },
         // Get all books
-        books: async (parent, {limit}) => {
+        books: async (parent, { limit }) => {
             try {
                 return await Book.find().limit(limit);
             } catch (err) {
@@ -64,13 +64,21 @@ const resolvers = {
                 throw new Error("Failed to fetch book by ISBN");
             }
         },
+
         // Get all clubs
         clubs: async () => {
             try {
                 return await Club.find()
                     .populate("founder")
                     .populate("members")
-                    .populate("posts");
+                    .populate({
+                        path: "posts",
+                        populate: {
+                            path: "author",
+                            select: "username",
+                            match: { username: { $exists: true, $ne: null } }, // Ensure only valid users with a username are populated
+                        },
+                    });
             } catch (err) {
                 throw new Error("Failed to fetch clubs");
             }
@@ -78,39 +86,22 @@ const resolvers = {
         // Get a single club by ID
         club: async (parent, { _id }) => {
             try {
-                return await Club.findById(_id)
+                const club = await Club.findById(_id)
                     .populate("members")
+                    .populate("founder")
                     .populate("posts");
+                if (!club) throw new Error("Club not found");
+                return club;
             } catch (err) {
                 throw new Error("Failed to fetch club");
             }
         },
-        // Get all comments
-        comments: async () => {
-            try {
-                return await Comment.find().populate({
-                    path: "author",
-                    model: "User",
-                });
-            } catch (err) {
-                throw new Error("Failed to fetch comments");
-            }
-        },
-        // Get a single comment by ID
-        comment: async (parent, { _id }) => {
-            try {
-                return await Comment.findById(_id).populate("author");
-            } catch (err) {
-                throw new Error("Failed to fetch comment");
-            }
-        },
-        // Get all reviews
         getAllReviews: async () => {
             try {
                 return await Review.find()
                     .populate({
                         path: "book",
-                        select: "_id blob title", // Adjusted to include title
+                        select: "_id blob title",
                     })
                     .populate("user");
             } catch (err) {
@@ -126,36 +117,81 @@ const resolvers = {
                 throw new Error("Failed to fetch user's wishcart");
             }
         },
+        getAllPostsOfAClub: async (_, { clubId }) => {
+            try {
+                const posts = await Post.find({ parentClub: clubId })
+                    .populate("author", "username") // Populate author with just username
+                    .populate("parentClub", "name"); // Optionally populate the club name
+                return posts;
+            } catch (err) {
+                console.error(err);
+                throw new Error("Failed to retrieve posts for the club");
+            }
+        },
     },
     Mutation: {
+        addPost: async (_, { title, content, club, author, media, blob }) => {
+            try {
+                // Validate the club and author
+                const existingClub = await Club.findById(club);
+                if (!existingClub) {
+                    throw new Error("Club not found");
+                }
+
+                const existingUser = await User.findById(author);
+                if (!existingUser) {
+                    throw new Error("User not found");
+                }
+
+                // Create a new post
+                const newPost = await Post.create({
+                    title,
+                    content,
+                    parentClub: club, // Use parentClub in the Post model
+                    author,
+                    media,
+                    blob,
+                });
+
+                // Add the post to the club's posts array
+                existingClub.posts.push(newPost._id);
+                await existingClub.save();
+
+                // Optionally add the post to the author's posts array
+                if (existingUser.posts) {
+                    existingUser.posts.push(newPost._id);
+                    await existingUser.save();
+                }
+
+                // Find the new post by its ID and populate the author and club fields
+                const populatedPost = await Post.findById(newPost._id)
+                    .populate("parentClub")
+                    .populate("author");
+
+                // Return the populated post
+                return populatedPost;
+            } catch (err) {
+                console.error(err);
+                throw new Error("Failed to create post");
+            }
+        },
+
         // Create a new user
         addUser: async (parent, { username, email, password }) => {
             try {
-                console.log("Hashing password for:", email); // Debug line
-      
-        // Hash the password
-        const hashedPassword = await bcrypt.hash(password, 10);
-      
-        console.log("Password hashed successfully:", hashedPassword); // Debug line
-      
-        // Create the new user with the hashed password
-        const user = await User.create({
-           username,
-           email,
-           password: hashedPassword
-        });
+                const hashedPassword = await bcrypt.hash(password, 10);
+                const user = await User.create({
+                    username,
+                    email,
+                    password: hashedPassword,
+                });
 
-        console.log("User created successfully:", user); // Debug line
-
-        // Generate a token
-        const token = signToken(user);
-
-        return { token, user };
-        } catch (err) {
-          console.error("Error in addUser resolver:", err); // More detailed error
-          throw new Error('Failed to create user');
-        }
-        },  
+                const token = signToken(user);
+                return { token, user };
+            } catch (err) {
+                throw new Error("Failed to create user");
+            }
+        },
         // Login an existing user
         login: async (parent, { email, password }) => {
             try {
@@ -204,46 +240,6 @@ const resolvers = {
                 return await User.findByIdAndDelete(_id);
             } catch (err) {
                 throw new Error("Failed to delete user");
-            }
-        },
-        // Update user password
-        updatePassword: async (
-            parent,
-            { _id, lastPassword, newPassword },
-            context
-        ) => {
-            if (!context.user || context.user._id !== _id) {
-                throw new AuthenticationError("Not authorized");
-            }
-            try {
-                const user = await User.findById(_id);
-                const correctPw = await user.isCorrectPassword(lastPassword);
-                if (!correctPw) {
-                    throw new AuthenticationError("Incorrect password");
-                }
-                user.password = newPassword;
-                await user.save();
-                return user;
-            } catch (err) {
-                throw new Error("Failed to update password");
-            }
-        },
-        // Add a friend to a user
-        addFriend: async (parent, { user_Id, friend_Id }, context) => {
-            if (!context.user || context.user._id !== user_Id) {
-                throw new AuthenticationError("Not authorized");
-            }
-            try {
-                const user = await User.findById(user_Id);
-                if (user.friends.includes(friend_Id)) {
-                    throw new Error("Already friends");
-                }
-                user.friends.push(friend_Id);
-                await user.save();
-                await user.populate("friends");
-                return user;
-            } catch (err) {
-                throw new Error("Failed to add friend");
             }
         },
         // Add a new book
@@ -324,167 +320,6 @@ const resolvers = {
                 return newReview;
             } catch (err) {
                 throw new Error("Failed to add review");
-            }
-        },
-        // Update a review by ID
-        updateReview: async (
-            parent,
-            { _id, reviewText, rating, title, content, inks }
-        ) => {
-            try {
-                const updateFields = {};
-                if (reviewText !== undefined)
-                    updateFields.reviewText = reviewText;
-                if (rating !== undefined) updateFields.rating = rating;
-                if (title !== undefined) updateFields.title = title;
-                if (content !== undefined) updateFields.content = content;
-                if (inks !== undefined) updateFields.inks = inks;
-
-                return await Review.findByIdAndUpdate(_id, updateFields, {
-                    new: true,
-                })
-                    .populate("user")
-                    .populate("book");
-            } catch (err) {
-                throw new Error("Failed to update review");
-            }
-        },
-        // Delete a review by ID
-        deleteReview: async (parent, { _id }) => {
-            try {
-                return await Review.findByIdAndDelete(_id);
-            } catch (err) {
-                throw new Error("Failed to delete review");
-            }
-        },
-        // Add a new comment to a post or book
-        addComment: async (parent, { title, content, author, blob }) => {
-            try {
-                const comment = await Comment.create({
-                    title,
-                    content,
-                    author,
-                    blob,
-                });
-                await Book.findByIdAndUpdate(author, {
-                    $push: { comments: comment._id },
-                });
-                return comment;
-            } catch (err) {
-                throw new Error("Failed to add comment");
-            }
-        },
-        // Update a comment by ID
-        updateComment: async (parent, { _id, title, content, blob }) => {
-            try {
-                return await Comment.findByIdAndUpdate(
-                    _id,
-                    { title, content, blob },
-                    { new: true }
-                );
-            } catch (err) {
-                throw new Error("Failed to update comment");
-            }
-        },
-        // Delete a comment by ID
-        deleteComment: async (parent, { _id }) => {
-            try {
-                return await Comment.findByIdAndDelete(_id);
-            } catch (err) {
-                throw new Error("Failed to delete comment");
-            }
-        },
-        // Add a new club
-        addClub: async (parent, args, context) => {
-            if (!context.user) {
-                throw new AuthenticationError("Not authorized");
-            }
-            try {
-                return await Club.create(args);
-            } catch (err) {
-                throw new Error("Failed to create club");
-            }
-        },
-        // Update a club's data
-        updateClub: async (
-            parent,
-            { _id, clubName, description, img },
-            context
-        ) => {
-            if (!context.user) {
-                throw new AuthenticationError("Not authorized");
-            }
-            try {
-                return await Club.findByIdAndUpdate(
-                    _id,
-                    { clubName, description, img },
-                    { new: true }
-                );
-            } catch (err) {
-                throw new Error("Failed to update club");
-            }
-        },
-        // Delete a club by ID
-        deleteClub: async (parent, { _id }, context) => {
-            if (!context.user) {
-                throw new AuthenticationError("Not authorized");
-            }
-            try {
-                return await Club.findByIdAndDelete(_id);
-            } catch (err) {
-                throw new Error("Failed to delete club");
-            }
-        },
-        // Add a new post to a club
-        addPost: async (
-            parent,
-            { title, content, parentClub, author, media, blob },
-            context
-        ) => {
-            if (!context.user) {
-                throw new AuthenticationError("Not authorized");
-            }
-            try {
-                return await Post.create({
-                    title,
-                    content,
-                    parentClub,
-                    author,
-                    media,
-                    blob,
-                });
-            } catch (err) {
-                throw new Error("Failed to add post");
-            }
-        },
-        // Update a post by ID
-        updatePost: async (
-            parent,
-            { _id, title, content, media, blob },
-            context
-        ) => {
-            if (!context.user) {
-                throw new AuthenticationError("Not authorized");
-            }
-            try {
-                return await Post.findByIdAndUpdate(
-                    _id,
-                    { title, content, media, blob },
-                    { new: true }
-                );
-            } catch (err) {
-                throw new Error("Failed to update post");
-            }
-        },
-        // Delete a post by ID
-        deletePost: async (parent, { _id }, context) => {
-            if (!context.user) {
-                throw new AuthenticationError("Not authorized");
-            }
-            try {
-                return await Post.findByIdAndDelete(_id);
-            } catch (err) {
-                throw new Error("Failed to delete post");
             }
         },
     },
