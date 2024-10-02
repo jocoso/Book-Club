@@ -13,7 +13,7 @@ const app = express();
 
 // CORS setup with dynamic origin handling
 const allowedOrigins = [
-    "https://book-club-1.onrender.com", // Frontend production URL
+    "https://book-club-1.onrender.com/graphql", // Frontend production URL
     "http://localhost:5173", // Local development (if necessary)
     "https://book-club-8svz.onrender.com"
 ];
