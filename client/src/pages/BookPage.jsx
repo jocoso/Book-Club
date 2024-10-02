@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import Title from "../components/Title";
 
 const BookPage = () => {
     const { isbn } = useParams(); // Get ISBN from the route parameters
@@ -35,26 +35,36 @@ const BookPage = () => {
 
     // Handle loading state
     if (loading) {
-        return <div>Loading...</div>;
+        return <div className="flex justify-center items-center h-screen">Loading...</div>;
     }
 
     // Handle error state
     if (error) {
-        return <div>Error: {error}</div>;
+        return <div className="flex justify-center items-center h-screen text-red-500">Error: {error}</div>;
     }
 
     // Handle case where book data is not found
     if (!book) {
-        return <div>No book data available.</div>;
+        return <div className="flex justify-center items-center h-screen">No book data available.</div>;
     }
-    
 
     return (
-        <div>
-            <Link to="/">Back</Link>
-            <h1>{book.bookData.title}</h1>
-            <p>{book.bookData.description}</p>
-            <p>Author: {book.bookData.author}</p>
+        <div className="container mx-auto px-4 py-8">
+            <div className="bg-white shadow-lg rounded-lg p-6 md:flex md:space-x-6">
+                <div className="md:w-1/3 mb-6 md:mb-0">
+                    {/* Placeholder for the book cover */}
+                    <img 
+                        src={book.bookData.image || "https://via.placeholder.com/300"} 
+                        alt={book.bookData.title}
+                        className="w-full h-auto object-cover rounded-lg"
+                    />
+                </div>
+                <div className="md:w-2/3">
+                    <Title className="text-3xl font-bold mb-4">{book.bookData.title}</Title>
+                    <p className="text-gray-700 mb-6">{book.bookData.description}</p>
+                    <p className="text-lg font-semibold mb-2">Author: <span className="text-gray-600">{book.bookData.author}</span></p>
+                </div>
+            </div>
         </div>
     );
 };
